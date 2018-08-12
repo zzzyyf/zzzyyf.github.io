@@ -6,20 +6,24 @@
     
 
     
-    <title>从0.1开始学Android</title>
+    <title>Android第三课——测试与调试 | 从0.1开始学Android</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="description" content="Android Tutorial">
-<meta property="og:type" content="website">
-<meta property="og:title" content="从0.1开始学Android">
-<meta property="og:url" content="http://zyfAndroid.com/index.html">
+        <meta name="keywords" content="Android,第三课,日志,logcat" />
+    
+    <meta name="description" content="测试与调试log类与logcat工具分类 Log.v()，对应verbose级别，最低的日志级别 Log.d()，对应debug级别，运行时会被去掉 Log.i()，对应info级别 Log.w()，对应warn级别 Log.e()，对应error级别用法 传入两个字符串参数 tag，一般传入当前的类名即可，用于对打印信息进行过滤 msg，想要打印的具体内容   输入logX按TAB即可补全对应的">
+<meta name="keywords" content="Android,第三课,日志,logcat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android第三课——测试与调试">
+<meta property="og:url" content="http://zyfAndroid.com/2018/08/12/Android第三课——日志工具Logcat的使用/index.html">
 <meta property="og:site_name" content="从0.1开始学Android">
-<meta property="og:description" content="Android Tutorial">
+<meta property="og:description" content="测试与调试log类与logcat工具分类 Log.v()，对应verbose级别，最低的日志级别 Log.d()，对应debug级别，运行时会被去掉 Log.i()，对应info级别 Log.w()，对应warn级别 Log.e()，对应error级别用法 传入两个字符串参数 tag，一般传入当前的类名即可，用于对打印信息进行过滤 msg，想要打印的具体内容   输入logX按TAB即可补全对应的">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-12T05:28:45.774Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="从0.1开始学Android">
-<meta name="twitter:description" content="Android Tutorial">
+<meta name="twitter:title" content="Android第三课——测试与调试">
+<meta name="twitter:description" content="测试与调试log类与logcat工具分类 Log.v()，对应verbose级别，最低的日志级别 Log.d()，对应debug级别，运行时会被去掉 Log.i()，对应info级别 Log.w()，对应warn级别 Log.e()，对应error级别用法 传入两个字符串参数 tag，一般传入当前的类名即可，用于对打印信息进行过滤 msg，想要打印的具体内容   输入logX按TAB即可补全对应的">
     
 
     
@@ -132,235 +136,137 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <em class="page-title-link" data-url="home">主页</em>
+    未分类
     </h1>
 </div>
                         <div class="main-body-content">
-                            
-
-    
-    
+                            <article id="post-Android第三课——日志工具Logcat的使用" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
         
-        
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2018" class="archive-year"><i class="icon fa fa-calendar-o"></i>2018</a>
-            </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2018/08/12/Android第三课——日志工具Logcat的使用/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="disqus-comment-count" data-disqus-identifier="" data-disqus-url="http://zyfAndroid.com/2018/08/12/Android第三课——日志工具Logcat的使用/">0</span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            
-            </div>
-            <div class="date"><time datetime="2018-08-12T05:27:37.000Z" itemprop="datePublished">2018-08-12</time></div>
-        </div>
-        
+            <header class="article-header">
+                
     
         <h1 class="article-title" itemprop="name">
-        <a href="/2018/08/12/Android第三课——日志工具Logcat的使用/">Android第三课——测试与调试</a>
+        Android第三课——测试与调试
         </h1>
     
 
-        <p class="article-excerpt">
-            测试与调试log类与logcat工具分类
-Log.v()，对应verbose级别，最低的日志级别
-Log.d()，对应debug级别，运行时会被去掉
-Log.i()，对应info级别
-Log.w()，对应warn级别
-Log.e()，对应error级别用法
-传入两个字符串参数
-tag，一般传入当前的类名即可，用于对打印信息进行过滤
-msg，想要打印的具体内容
-
-
-输入logX按TAB即可补全对应的
-        </p>
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2018/08/12/Android第三课——日志工具Logcat的使用/" class="article-date">
+            <time datetime="2018-08-12T05:27:37.000Z" itemprop="datePublished">2018-08-12</time>
+        </a>
     </div>
-</article>
-    
 
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2018/08/12/Android第二课——构建简单的应用/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="disqus-comment-count" data-disqus-identifier="" data-disqus-url="http://zyfAndroid.com/2018/08/12/Android第二课——构建简单的应用/">0</span>
-    
-</span>
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/logcat/">logcat</a>, <a class="tag-link" href="/tags/日志/">日志</a>, <a class="tag-link" href="/tags/第三课/">第三课</a>
+    </div>
 
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            
             </div>
-            <div class="date"><time datetime="2018-08-12T05:16:22.000Z" itemprop="datePublished">2018-08-12</time></div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h2 id="测试与调试"><a href="#测试与调试" class="headerlink" title="测试与调试"></a>测试与调试</h2><h3 id="log类与logcat工具"><a href="#log类与logcat工具" class="headerlink" title="log类与logcat工具"></a>log类与logcat工具</h3><h4 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h4><ul>
+<li><code>Log.v()</code>，对应verbose级别，最低的日志级别</li>
+<li><code>Log.d()</code>，对应debug级别，<strong>运行时会被去掉</strong></li>
+<li><code>Log.i()</code>，对应info级别</li>
+<li><code>Log.w()</code>，对应warn级别</li>
+<li><code>Log.e()</code>，对应error级别<h4 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h4></li>
+<li>传入两个字符串参数<ul>
+<li>tag，一般传入当前的类名即可，用于对打印信息进行过滤</li>
+<li>msg，想要打印的具体内容</li>
+</ul>
+</li>
+<li>输入<code>logX</code>按<code>TAB</code>即可补全对应的方法。</li>
+<li>在<code>onCreate()</code>方法外输入<code>logt</code>按<code>TAB</code>即可生成当前类名的tag常量。</li>
+<li>可以在logcat中用关键字进行进一步过滤日志，关键字<strong>支持正则表达式</strong>。</li>
+</ul>
+
         </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2018/08/12/Android第二课——构建简单的应用/">Android第二课——构建简单的应用</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            编写应用一个最简单的app主代码12345678public class HelloWorldActivity extends AppCompatActivity &#123;    @Override     protected void onCreate(Bundle savedInstanceState) &#123;     super.onCreate(savedInstanceStat
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2018/08/12/undefined-2018-08-12/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://raw.githubusercontent.com/zzzyyf/C-Codes/master/Android_Project_Structure.png)" alt="Android第一课——初识Android" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="disqus-comment-count" data-disqus-identifier="" data-disqus-url="http://zyfAndroid.com/2018/08/12/undefined-2018-08-12/">0</span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
+        <footer class="article-footer">
             
-            </div>
-            <div class="date"><time datetime="2018-08-12T04:24:28.000Z" itemprop="datePublished">2018-08-12</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2018/08/12/undefined-2018-08-12/">Android第一课——初识Android</a>
-        </h1>
-    
 
-        <p class="article-excerpt">
-            Android四大组件Activity活动
-包含应用所有看得见的东西Service服务
-无法看到，在后台运行，退出应用仍可继续运行Broadcast Receiver广播接收器
-允许应用接收来自各处的消息，如电话、短信等。应用也可发出自己的广播消息。Content Provider内容提供器
-程序间共享数据的方法
 
-Android工程的结构
-AndroidManifest.xml123456789
-        </p>
+
+    <a data-url="http://zyfAndroid.com/2018/08/12/Android第三课——日志工具Logcat的使用/" data-id="cjkqew18f0000qcsv7d5s4oly" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
     </div>
 </article>
-    
 
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2018/08/12/hello-world/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
+    <section id="comments">
     
         
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="disqus-comment-count" data-disqus-identifier="" data-disqus-url="http://zyfAndroid.com/2018/08/12/hello-world/">0</span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            
-            </div>
-            <div class="date"><time datetime="2018-08-12T02:24:45.393Z" itemprop="datePublished">2018-08-12</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2018/08/12/hello-world/">Hello World</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            这里是我的Android开发学习笔记。我使用Android Studio + Java进行开发，以郭霖的《第一行代码》为主要参考资料，辅以Android官方文档及网上其他资料。 由于本人纯小白，也会在此发表一些Java学习笔记。因为本人处在不断学习的阶段，之前发表的文章也可能会更新内容。
-本博客使用Hexo 搭建。
-
-        </p>
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
     </div>
-</article>
+
     
-        </div>
-    
-
-
-    </div></section>
-
+    </section>
 
 
                         </div>
@@ -421,6 +327,19 @@ AndroidManifest.xml123456789
             
         </ul>
     </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2018/08/12/Android第二课——构建简单的应用/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">Android第二课——构建简单的应用</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
@@ -602,11 +521,13 @@ AndroidManifest.xml123456789
     var disqus_shortname = 'hexo-theme-hueman';
     
     
+    var disqus_url = 'http://zyfAndroid.com/2018/08/12/Android第三课——日志工具Logcat的使用/';
+    
     (function() {
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
     </script>
