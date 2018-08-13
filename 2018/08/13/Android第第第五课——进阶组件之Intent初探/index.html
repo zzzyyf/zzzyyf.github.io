@@ -20,7 +20,7 @@
 <meta property="og:site_name" content="从0.1开始学Android">
 <meta property="og:description" content="Intent Intent 会在运行时将各个组件相互绑定（您可以将 Intent 视为从其他组件请求操作的信使），无论组件属于您的应用还是其他应用。  Intent是Android程序中各组件之间交互的重要方式，不仅可指明当前组件想要的动作，还能在不同组件间传递数据。 Intent包含的部分：组件名称，操作，数据，类别，Extra，标志   显式Intent 显式Intent指定明确的上下文和要转">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-08-13T04:32:03.884Z">
+<meta property="og:updated_time" content="2018-08-13T04:59:42.849Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android第五课——进阶组件之Intent初探">
 <meta name="twitter:description" content="Intent Intent 会在运行时将各个组件相互绑定（您可以将 Intent 视为从其他组件请求操作的信使），无论组件属于您的应用还是其他应用。  Intent是Android程序中各组件之间交互的重要方式，不仅可指明当前组件想要的动作，还能在不同组件间传递数据。 Intent包含的部分：组件名称，操作，数据，类别，Extra，标志   显式Intent 显式Intent指定明确的上下文和要转">
@@ -217,7 +217,7 @@
 <li>用setResult()方法设置传回Intent和结果（<code>RESULT_OK</code>或<code>RESULT_CANCELED</code>）</li>
 <li>用<code>finish()</code>方法结束当前活动并传回Intent</li>
 <li>返回到上一个活动后会回调<code>onActivityResult()</code>方法，重写该方法添加从中得到返回的数据的逻辑</li>
-<li>注意“返回到上一个活动时”包含所有返回的情况，如按Back键等，在按Back键返回的情况下需要重写<code>onBackPressed()</code>方法来执行<code>setResult()</code>方法。</li>
+<li>注意“返回到上一个活动时”包含所有返回的情况，如按Back键等，在按Back键返回的情况下需要重写<code>onBackPressed()</code>方法来执行<code>setResult()</code>方法。（此时<code>super.onBackPressed()</code>要写在最后）</li>
 </ol>
 </li>
 <li><p>更多Intent的例子会在之后的广播中遇到。</p>
@@ -230,7 +230,7 @@
 
 
 
-    <a data-url="http://zyfAndroid.com/2018/08/13/Android第第第五课——进阶组件之Intent初探/" data-id="cjkrs7q0i0008zosvz3sjyumq" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://zyfAndroid.com/2018/08/13/Android第第第五课——进阶组件之Intent初探/" data-id="cjkrt7blg0004jssvdx5vob38" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
