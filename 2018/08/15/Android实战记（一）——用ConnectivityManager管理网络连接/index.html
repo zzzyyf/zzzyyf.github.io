@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>Android实战记（一）——用ConnectivityManager管理网络连接 | 从0.1开始学Android</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Android,实战,网络,ConnectivityManager,NetworkCallback,线程,Handler" />
+    
+    <meta name="description" content="最近看《第一行代码》看到了广播那一章，跟着书写到动态注册监听网络变化的那一节。其中一段代码如下：123456789101112131415public class MainActivity extends AppCompatActivity &amp;#123; 	...     class NetworkChangeReceiver extends BroadcastReceiver &amp;#123;">
+<meta name="keywords" content="Android,实战,网络,ConnectivityManager,NetworkCallback,线程,Handler">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android实战记（一）——用ConnectivityManager管理网络连接">
+<meta property="og:url" content="http://zyfAndroid.com/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/index.html">
+<meta property="og:site_name" content="从0.1开始学Android">
+<meta property="og:description" content="最近看《第一行代码》看到了广播那一章，跟着书写到动态注册监听网络变化的那一节。其中一段代码如下：123456789101112131415public class MainActivity extends AppCompatActivity &amp;#123; 	...     class NetworkChangeReceiver extends BroadcastReceiver &amp;#123;">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-17T03:19:01.404Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android实战记（一）——用ConnectivityManager管理网络连接">
+<meta name="twitter:description" content="最近看《第一行代码》看到了广播那一章，跟着书写到动态注册监听网络变化的那一节。其中一段代码如下：123456789101112131415public class MainActivity extends AppCompatActivity &amp;#123; 	...     class NetworkChangeReceiver extends BroadcastReceiver &amp;#123;">
+    
+
+    
+        <link rel="alternate" href="/" title="从0.1开始学Android" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">zyf的Android学习笔记</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                        
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    未分类
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-Android实战记（一）——用ConnectivityManager管理网络连接" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        Android实战记（一）——用ConnectivityManager管理网络连接
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/" class="article-date">
+            <time datetime="2018-08-15T02:39:57.000Z" itemprop="datePublished">2018-08-15</time>
+        </a>
+    </div>
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/ConnectivityManager/">ConnectivityManager</a>, <a class="tag-link" href="/tags/Handler/">Handler</a>, <a class="tag-link" href="/tags/NetworkCallback/">NetworkCallback</a>, <a class="tag-link" href="/tags/实战/">实战</a>, <a class="tag-link" href="/tags/线程/">线程</a>, <a class="tag-link" href="/tags/网络/">网络</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>最近看《第一行代码》看到了广播那一章，跟着书写到动态注册监听网络变化的那一节。其中一段代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123; </span><br><span class="line">	... </span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">NetworkChangeReceiver</span> <span class="keyword">extends</span> <span class="title">BroadcastReceiver</span> </span>&#123; </span><br><span class="line">	    <span class="meta">@Override</span> </span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceive</span><span class="params">(Context context, Intent intent)</span> </span>&#123; </span><br><span class="line">		    ConnectivityManager connectionManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE); </span><br><span class="line">		    NetworkInfo networkInfo = connectionManager.getActiveNetworkInfo(); </span><br><span class="line">		    <span class="keyword">if</span> (networkInfo != <span class="keyword">null</span> &amp;&amp; networkInfo.isAvailable()) &#123; </span><br><span class="line">		    	Toast.makeText(context, <span class="string">"network is available"</span>, Toast.LENGTH_SHORT).show(); </span><br><span class="line">		    &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">			    Toast.makeText(context, <span class="string">"network is unavailable"</span>, Toast.LENGTH_SHORT).show(); </span><br><span class="line">		    &#125; </span><br><span class="line">		&#125; </span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在参考<a href="https://developer.android.google.cn/reference/android/net/NetworkInfo.html#isAvailable(" target="_blank" rel="noopener">官方文档</a>)时，偶然发现上述代码中使用的<code>Network.onAvailable()</code>方法在<em>API 28</em>也就是Android P被摒弃了，官方转而推荐使用<code>ConnectivityManager.NetworkCallback</code>API来监听网络变化。既然如此，我就想了解一下官方推荐的方法怎么使用。</p>
+<ol>
+<li>查阅了种种资料之后，我写了第一个版本试试看（最小SDK为Android M）：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> NetworkRequest networkRequest;</span><br><span class="line">    <span class="keyword">private</span> ConnectivityManager connMgr;</span><br><span class="line">    <span class="keyword">private</span> ConnectivityManager.NetworkCallback networkCallback;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        connMgr = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);</span><br><span class="line">        networkRequest = <span class="keyword">new</span> NetworkRequest.Builder().build();</span><br><span class="line">        networkCallback = <span class="keyword">new</span> NetworkCallbackImped();</span><br><span class="line">        connMgr.registerNetworkCallback(networkRequest, networkCallback);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        connMgr.unregisterNetworkCallback(networkCallback);<span class="comment">//此处这句可以不写，可以理解为退出应用后会自动取消注册</span></span><br><span class="line">    &#125;</span><br><span class="line">     <span class="class"><span class="keyword">class</span> <span class="title">NetworkCallbackImped</span> <span class="keyword">extends</span> <span class="title">ConnectivityManager</span>.<span class="title">NetworkCallback</span></span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAvailable</span><span class="params">(Network network)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>.onAvailable(network);</span><br><span class="line">            Toast.makeText(getBaseContext(), <span class="string">"网络正常"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLost</span><span class="params">(Network network)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>.onLost(network);</span><br><span class="line">            Toast.makeText(getBaseContext(), <span class="string">"网络已断开"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>Java基础比较深或者对UI编写中给View实现监听器还有印象的朋友应该可以看出来在<code>registerNetworkCallback()</code>方法中直接使用匿名内部类也完全可以。</p>
+<ol start="2">
+<li>这一版在初步测试里没发现什么问题，于是突发奇想想做个拓展，没有网络时在界面上显示一个红色背景的文本框<code>title</code>，有网络时文本框自动消失。于是抱着试试看的心态写了第二版：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> NetworkRequest networkRequest;</span><br><span class="line">    <span class="keyword">private</span> ConnectivityManager connMgr;</span><br><span class="line">    <span class="keyword">private</span> ConnectivityManager.NetworkCallback networkCallback;</span><br><span class="line">    <span class="keyword">private</span> TextView title;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        title = findViewById(R.id.title);</span><br><span class="line">        connMgr = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);</span><br><span class="line">        networkRequest = <span class="keyword">new</span> NetworkRequest.Builder().build();</span><br><span class="line">        networkCallback = <span class="keyword">new</span> NetworkCallbackImped();</span><br><span class="line">        connMgr.registerNetworkCallback(networkRequest, networkCallback);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">     <span class="class"><span class="keyword">class</span> <span class="title">NetworkCallbackImped</span> <span class="keyword">extends</span> <span class="title">ConnectivityManager</span>.<span class="title">NetworkCallback</span></span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAvailable</span><span class="params">(Network network)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>.onAvailable(network);</span><br><span class="line">            Toast.makeText(getBaseContext(), <span class="string">"网络正常"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">            title.setVisibility(View.GONE);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLost</span><span class="params">(Network network)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>.onLost(network);</span><br><span class="line">            Toast.makeText(getBaseContext(), <span class="string">"网络已断开"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">            title.setVisibility(View.VISIBLE);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>结果收到了<code>android.view.ViewRootImpl$CalledFromWrongThreadException</code>，提示”Only the original thread that created a view hierarchy can touch its views.”，只有原始的创建了View结构的线程才能访问它的View。并且还提示错误来源于<code>ConnectivityThread</code>。经过又一番查询得知，Android应用的主线程控制UI的绘制，又称为UI线程，如果从其他线程访问UI将会遇到这个异常。那为什么更改<code>title</code>的可见性不是从主线程发出的呢？查询资料后发现，<code>ConnectivityManager</code>中封装了<code>ConnectivityService</code>，而<code>ConnectivityService</code>中会用到<code>ConnectivityThread</code>，所以是自动转到主线程之外了。</p>
+<ol start="3">
+<li>看来只能新建一个线程进行UI更新的相关操作了。这里使用了<code>Handler</code>来处理其他线程发给主线程更新UI的相关信息。这是第三版，其中把向主线程发送信息做成了方法：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> NetworkRequest networkRequest;</span><br><span class="line">    <span class="keyword">private</span> ConnectivityManager connMgr;</span><br><span class="line">    <span class="keyword">private</span> ConnectivityManager.NetworkCallback networkCallback;</span><br><span class="line">    <span class="keyword">private</span> TextView title;</span><br><span class="line">    <span class="keyword">private</span> MyHandler handler;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> CONN_AVAILABLE = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> CONN_UNAVAILABLE = <span class="number">0</span>;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        title = findViewById(R.id.title);</span><br><span class="line">        handler = <span class="keyword">new</span> MyHandler();</span><br><span class="line">        connMgr = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);</span><br><span class="line">        networkRequest = <span class="keyword">new</span> NetworkRequest.Builder().build();</span><br><span class="line">        networkCallback = <span class="keyword">new</span> NetworkCallbackImped();</span><br><span class="line">        MyThread thread = <span class="keyword">new</span> MyThread();</span><br><span class="line">        <span class="keyword">new</span> Thread(thread).start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sendConnInfo</span><span class="params">(<span class="keyword">int</span> info)</span></span>&#123;</span><br><span class="line">        Message message = <span class="keyword">new</span> Message();</span><br><span class="line">        Bundle bundle = <span class="keyword">new</span> Bundle();</span><br><span class="line">        bundle.putInt(<span class="string">"conn"</span>, info);</span><br><span class="line">        message.setData(bundle);</span><br><span class="line">        handler.sendMessage(message);<span class="comment">//给handler发送连接可用的信息</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">NetworkCallbackImped</span> <span class="keyword">extends</span> <span class="title">ConnectivityManager</span>.<span class="title">NetworkCallback</span></span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAvailable</span><span class="params">(Network network)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>.onAvailable(network);</span><br><span class="line">            sendConnInfo(CONN_AVAILABLE);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLost</span><span class="params">(Network network)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>.onLost(network);</span><br><span class="line">            sendConnInfo(CONN_UNAVAILABLE);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">MyThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            connMgr.registerNetworkCallback(networkRequest, networkCallback);</span><br><span class="line">            <span class="keyword">if</span> (connMgr.getActiveNetworkInfo()==<span class="keyword">null</span>)&#123;</span><br><span class="line">                sendConnInfo(CONN_UNAVAILABLE);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">MyHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span></span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>.handleMessage(msg);</span><br><span class="line">            Bundle data = msg.getData();</span><br><span class="line">            <span class="keyword">int</span> netConnectivity = data.getInt(<span class="string">"conn"</span>);</span><br><span class="line">            <span class="keyword">switch</span> (netConnectivity)&#123;</span><br><span class="line">                <span class="keyword">case</span> CONN_UNAVAILABLE:</span><br><span class="line">                    Toast.makeText(getBaseContext(), <span class="string">"好像没有网络了……"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">                    title.setVisibility(View.VISIBLE);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> CONN_AVAILABLE:</span><br><span class="line">                    Toast.makeText(getBaseContext(), <span class="string">"网络已恢复"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">                    title.setVisibility(View.GONE);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这一版解决了<code>android.view.ViewRootImpl$CalledFromWrongThreadException</code>，但是在更进一步的测试中发现了之前没发现的一个问题：开启了开发者模式中“始终保持数据网络”选项（<em>下称“该选项”</em>）时，在数据开启的状态下，开启WiFi时会出现最后结果为没有网络的情况。</p>
+<ol start="4">
+<li>仔细查看了官方文档后发现，<code>onAvailable()</code>方法是在框架连接了<strong>新的</strong>网络时调用：<blockquote>
+<p>Called when the framework connects and has declared <strong>a new network</strong> ready for use.</p>
+</blockquote>
+</li>
+</ol>
+<p>而<code>onLost()</code>方法则是在框架<strong>失去某个</strong>网络连接时调用：</p>
+<blockquote>
+<p>Called when the framework has a hard loss of <strong>the network</strong> or when the graceful failure ends.</p>
+</blockquote>
+<p>于是又在<code>onLost()</code>方法中加上了<code>NetworkCapabilities.hasTransport()</code>方法用于检测当前网络的类型。我们都知道，一般情况下，当开启数据的同时开启WiFi，系统会自动切换至WiFi，而经过多次实际检测，发现在开启该选项时，这个过程是先连接至WiFi（调用<code>onAvailable()</code>方法），大概过30秒左右再断开数据（调用<code>onLost()</code>方法），所以最后返回的结果是网络断开。</p>
+<blockquote>
+<p><code>NetworkCapabilities.hasTransport()</code>方法也是<a href="https://developer.android.google.cn/reference/android/net/NetworkInfo.html#getType(" target="_blank" rel="noopener">官方文档</a>)中建议用于替代旧的获取当前网络类型方法<code>NetworkInfo.getType()</code>的方法，在实际使用中，可以发现新方法获取的信息确实比旧方法多，包括是否计费、是否使用VPN等均可以检测到。</p>
+</blockquote>
+<p>所以在<code>onLost()</code>方法中还得判断一下是不是完全没有网络了，这一点可以用能否获取到<code>NetCapabilities</code>或<code>NetInfo</code>实例来判断。第4版代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ConnectivityManager connMgr;</span><br><span class="line">    <span class="keyword">private</span> TextView title;</span><br><span class="line">    <span class="keyword">private</span> MyHandler handler;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> CONN_AVAILABLE = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> CONN_UNAVAILABLE = <span class="number">0</span>;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        title = findViewById(R.id.title);</span><br><span class="line">        handler = <span class="keyword">new</span> MyHandler();</span><br><span class="line">        connMgr = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);</span><br><span class="line">        MyThread thread = <span class="keyword">new</span> MyThread();<span class="comment">//新建Runnable实例</span></span><br><span class="line">        <span class="keyword">new</span> Thread(thread).start();<span class="comment">//启动新线程</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//给handler发送连接可用的信息</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sendConnInfo</span><span class="params">(<span class="keyword">int</span> info)</span></span>&#123;</span><br><span class="line">        Message message = <span class="keyword">new</span> Message();</span><br><span class="line">        Bundle bundle = <span class="keyword">new</span> Bundle();</span><br><span class="line">        bundle.putInt(<span class="string">"conn"</span>, info);</span><br><span class="line">        message.setData(bundle);</span><br><span class="line">        handler.sendMessage(message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">NetworkCallbackImped</span> <span class="keyword">extends</span> <span class="title">ConnectivityManager</span>.<span class="title">NetworkCallback</span></span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAvailable</span><span class="params">(Network network)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>.onAvailable(network);</span><br><span class="line">            sendConnInfo(CONN_AVAILABLE);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLost</span><span class="params">(Network network)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>.onLost(network);</span><br><span class="line">            <span class="comment">//此处遇到问题，开启开发者选项“始终开启移动数据网络”时，在开启数据时打开wifi，最终呈现是网络断开，但是能用NetworkCapabilities检测到wifi</span></span><br><span class="line">            <span class="comment">//查看文档发现onLost()方法是在有`network`断开而并非**所有`network`都断开**时，即有任意网络连接断开时即触发。</span></span><br><span class="line">            <span class="comment">//onAvailable()方法是在有**新的**`network`可用时触发。</span></span><br><span class="line">            <span class="comment">//经检测当wifi和移动网络同时连接时，先连接wifi，触发onAvailable()方法，但移动网络要过30s左右才断开，所以会触发onLost()方法。</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">//另有开启开发者选项“始终开启移动数据网络”时，数据WiFi双开时关闭WiFi后先调用`onAvailable()`方法后调用`onLost()`方法，且`NetworkCapabilities`为null的情况。</span></span><br><span class="line">            <span class="comment">//结果发现出现此Bug的原因是关闭WiFi时刚好是之前讲的连接了WiFi后和断开移动网络前，所以只会调用`onLost()`方法。</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">//此处整理一下开启“始终开启移动数据网络”与否的双开网络变化情况。</span></span><br><span class="line">            <span class="comment">//开启时：开着数据开WiFi时：先连接WiFi（但测试是数据），过约30s后断开数据。 双开关闭WiFi时：依据关WiFi的时机而定，在前述的30s内会无网络，30s之后马上切换至数据。</span></span><br><span class="line">            <span class="comment">//关闭时：开着数据开WiFi时：先连接WiFi，再马上关闭数据。 双开关闭WiFi时：先关闭WiFi，再连接数据。</span></span><br><span class="line">            <span class="keyword">if</span> (connMgr.getNetworkCapabilities(connMgr.getActiveNetwork()) == <span class="keyword">null</span>) sendConnInfo(CONN_UNAVAILABLE);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">MyThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            connMgr.registerNetworkCallback(<span class="keyword">new</span> NetworkRequest.Builder().build(), <span class="keyword">new</span> NetworkCallbackImped());</span><br><span class="line">            <span class="comment">//初始化时判断有无网络</span></span><br><span class="line">            <span class="keyword">if</span> (connMgr.getActiveNetworkInfo()==<span class="keyword">null</span>)&#123;</span><br><span class="line">                sendConnInfo(CONN_UNAVAILABLE);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">MyHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span></span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>.handleMessage(msg);</span><br><span class="line">            Bundle data = msg.getData();</span><br><span class="line">            <span class="keyword">int</span> netConnectivity = data.getInt(<span class="string">"conn"</span>);</span><br><span class="line">            <span class="keyword">switch</span> (netConnectivity)&#123;</span><br><span class="line">                <span class="keyword">case</span> CONN_UNAVAILABLE:</span><br><span class="line">                    Toast.makeText(getBaseContext(), <span class="string">"好像没有网络了……"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">                    title.setText(<span class="string">"好像没有网络了……"</span>);</span><br><span class="line">                    title.setVisibility(View.VISIBLE);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> CONN_AVAILABLE:</span><br><span class="line">                    Toast.makeText(getBaseContext(), <span class="string">"网络已恢复"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">                    title.setVisibility(View.GONE);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其实最后还是有一个Bug没有解决，那就是开启“始终保持移动网络连接”时，在上述的30s内（即开启数据后开启WiFi时系统连接WiFi但未关闭数据时）关闭WiFi时，最后会检测不到网络（表现为最后调用的是<code>onLost()</code>且<code>NetworkCapabilities</code>和<code>NetInfo</code>均为<code>null</code>）。个人猜测可能是<code>NetworkCallback</code>的方法回调与上述两实例的获取之间存在时间差，也有可能是个体差异（测试机型为一加6，系统版本为<code>ONEPLUS A6000_22_180810</code>及其上一版）。</p>
+<blockquote>
+<p>在进一步用Nubia Z11（Android 6.0.1）测试时，情况又有所变化。在未开启“始终保持移动网络连接”选项时，会出现类似一加6开启该选项的情况（即30s延迟）。但开启该选项后，双开后断开WiFi始终检测不到网络。</p>
+</blockquote>
+<p><strong>如果有朋友知晓原因，恳请不吝解惑！</strong><br>QQ: 504869112</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://zyfAndroid.com/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/" data-id="cjkxfdp1u0000nssvbqs1ospe" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-google-plus"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/zzzyyf" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="weibo" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-weibo"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2018/08/14/Android第六课——活动的生命周期/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">Android第六课——活动的生命周期</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/" class="title">Android实战记（一）——用ConnectivityManager管理网络连接</a></p>
+                            <p class="item-date"><time datetime="2018-08-15T02:39:57.000Z" itemprop="datePublished">2018-08-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/14/Android第六课——活动的生命周期/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://raw.githubusercontent.com/zzzyyf/C-Codes/master/activity_lifecycle.png)" alt="Android第六课——活动的生命周期" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/14/Android第六课——活动的生命周期/" class="title">Android第六课——活动的生命周期</a></p>
+                            <p class="item-date"><time datetime="2018-08-14T01:52:21.000Z" itemprop="datePublished">2018-08-14</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/13/Android第第第五课——进阶组件之Intent初探/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/13/Android第第第五课——进阶组件之Intent初探/" class="title">Android第五课——进阶组件之Intent初探</a></p>
+                            <p class="item-date"><time datetime="2018-08-13T02:58:46.000Z" itemprop="datePublished">2018-08-13</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/13/Android第四课——进阶组件之Toast与菜单/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/13/Android第四课——进阶组件之Toast与菜单/" class="title">Android第四课——进阶组件之Toast与菜单</a></p>
+                            <p class="item-date"><time datetime="2018-08-13T02:54:08.000Z" itemprop="datePublished">2018-08-13</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/12/Android第三课——日志工具Logcat的使用/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/12/Android第三课——日志工具Logcat的使用/" class="title">Android第三课——测试与调试</a></p>
+                            <p class="item-date"><time datetime="2018-08-12T05:27:37.000Z" itemprop="datePublished">2018-08-12</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ConnectivityManager/">ConnectivityManager</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Handler/">Handler</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Intent/">Intent</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NetworkCallback/">NetworkCallback</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Toast/">Toast</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logcat/">logcat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实战/">实战</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程/">工程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生命周期/">生命周期</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第一课/">第一课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第三课/">第三课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第二课/">第二课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第五课/">第五课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第六课/">第六课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第四课/">第四课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/结构/">结构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络/">网络</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/菜单/">菜单</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/资源/">资源</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/ConnectivityManager/" style="font-size: 10px;">ConnectivityManager</a> <a href="/tags/Handler/" style="font-size: 10px;">Handler</a> <a href="/tags/Intent/" style="font-size: 10px;">Intent</a> <a href="/tags/NetworkCallback/" style="font-size: 10px;">NetworkCallback</a> <a href="/tags/Toast/" style="font-size: 10px;">Toast</a> <a href="/tags/logcat/" style="font-size: 10px;">logcat</a> <a href="/tags/实战/" style="font-size: 10px;">实战</a> <a href="/tags/工程/" style="font-size: 10px;">工程</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/生命周期/" style="font-size: 10px;">生命周期</a> <a href="/tags/第一课/" style="font-size: 10px;">第一课</a> <a href="/tags/第三课/" style="font-size: 10px;">第三课</a> <a href="/tags/第二课/" style="font-size: 10px;">第二课</a> <a href="/tags/第五课/" style="font-size: 10px;">第五课</a> <a href="/tags/第六课/" style="font-size: 10px;">第六课</a> <a href="/tags/第四课/" style="font-size: 10px;">第四课</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/结构/" style="font-size: 10px;">结构</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/菜单/" style="font-size: 10px;">菜单</a> <a href="/tags/资源/" style="font-size: 10px;">资源</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2018 Winfrid Zhao</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'http://zyfAndroid.com/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
