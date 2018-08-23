@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>Android实战记（二）——使用本地广播实现强制下线 | 从0.1开始学Android</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Android,实战,Java,TextInputLayout,本地广播,AlertDialog,Broadcast,字符串" />
+    
+    <meta name="description" content="还是《第一行代码》中的例子，这次是广播一章最后的实例，利用广播实现强制下线。 1. 使用TextInputLayout原书中在登录用的LoginActivity里使用的是EditText，但是Android Studio提供的LoginActivity模板中在文本框外嵌套了TextInputLayout。经过查阅资料发现，TextInputLayout能实现很多有意思的功能。先来看看官方文档怎么说">
+<meta name="keywords" content="Android,实战,Java,TextInputLayout,本地广播,AlertDialog,Broadcast,字符串">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android实战记（二）——使用本地广播实现强制下线">
+<meta property="og:url" content="http://zyfAndroid.com/2018/08/23/androidPractice2/index.html">
+<meta property="og:site_name" content="从0.1开始学Android">
+<meta property="og:description" content="还是《第一行代码》中的例子，这次是广播一章最后的实例，利用广播实现强制下线。 1. 使用TextInputLayout原书中在登录用的LoginActivity里使用的是EditText，但是Android Studio提供的LoginActivity模板中在文本框外嵌套了TextInputLayout。经过查阅资料发现，TextInputLayout能实现很多有意思的功能。先来看看官方文档怎么说">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-23T09:59:44.785Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android实战记（二）——使用本地广播实现强制下线">
+<meta name="twitter:description" content="还是《第一行代码》中的例子，这次是广播一章最后的实例，利用广播实现强制下线。 1. 使用TextInputLayout原书中在登录用的LoginActivity里使用的是EditText，但是Android Studio提供的LoginActivity模板中在文本框外嵌套了TextInputLayout。经过查阅资料发现，TextInputLayout能实现很多有意思的功能。先来看看官方文档怎么说">
+    
+
+    
+        <link rel="alternate" href="/" title="从0.1开始学Android" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">zyf的Android学习笔记</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                        
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    未分类
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-androidPractice2" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        Android实战记（二）——使用本地广播实现强制下线
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2018/08/23/androidPractice2/" class="article-date">
+            <time datetime="2018-08-23T09:59:01.000Z" itemprop="datePublished">2018-08-23</time>
+        </a>
+    </div>
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/AlertDialog/">AlertDialog</a>, <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/Broadcast/">Broadcast</a>, <a class="tag-link" href="/tags/Java/">Java</a>, <a class="tag-link" href="/tags/TextInputLayout/">TextInputLayout</a>, <a class="tag-link" href="/tags/字符串/">字符串</a>, <a class="tag-link" href="/tags/实战/">实战</a>, <a class="tag-link" href="/tags/本地广播/">本地广播</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>还是《第一行代码》中的例子，这次是广播一章最后的实例，利用广播实现强制下线。</p>
+<h3 id="1-使用TextInputLayout"><a href="#1-使用TextInputLayout" class="headerlink" title="1. 使用TextInputLayout"></a>1. 使用<code>TextInputLayout</code></h3><p>原书中在登录用的<code>LoginActivity</code>里使用的是<code>EditText</code>，但是Android Studio提供的<code>LoginActivity</code>模板中在文本框外嵌套了<code>TextInputLayout</code>。经过查阅资料发现，<code>TextInputLayout</code>能实现很多有意思的功能。先来看看<a href="https://developer.android.google.cn/reference/android/support/design/widget/TextInputLayout" target="_blank" rel="noopener">官方文档</a>怎么说（以下本人渣翻译）：</p>
+<blockquote>
+<p>（<code>TextInputLayout</code>）是包裹一个<code>EditText</code>（或其子类）的布局，用于在用户进行输入操作，hint隐藏时在文本框上方显示一段悬浮文本。<br>它也支持通过<code>setErrorEnabled(boolean)</code>和<code>setError(CharSequence)</code>方法显示（输入）错误以及通过<code>setCounterEnabled(boolean)</code>显示字符计数器。切换密码可见性也是由其<code>setPasswordVisibilityToggleEnabled(boolean)</code>API及相关（XML）属性支持的。如果启用此功能，当你的<code>EditText</code>被设为显示密码时，会显示一个用于切换密码是否可见的按钮。</p>
+</blockquote>
+<p>看起来确实非常实用，那就试试吧。</p>
+<ul>
+<li><p>首先要在<code>app/build.gradle</code>中添加库依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    ...</span><br><span class="line">    implementation &apos;com.android.support:design:27.1.1&apos;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后在布局文件中添加控件：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="tag">&lt;<span class="name">android.support.design.widget.TextInputLayout</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">"@+id/til_email"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">EditText</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/email"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:hint</span>=<span class="string">"@string/prompt_email"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:inputType</span>=<span class="string">"textEmailAddress"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:maxLines</span>=<span class="string">"1"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:singleLine</span>=<span class="string">"true"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">android.support.design.widget.TextInputLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">android.support.design.widget.TextInputLayout</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">"@+id/til_pass"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:passwordToggleEnabled</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--app:passwordToggleEnabled属性就是设置切换密码可见性的按钮--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">EditText</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/password"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:hint</span>=<span class="string">"@string/prompt_password"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:imeActionId</span>=<span class="string">"6"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:imeActionLabel</span>=<span class="string">"@string/action_sign_in_short"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:imeOptions</span>=<span class="string">"actionUnspecified"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:inputType</span>=<span class="string">"textPassword"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:maxLines</span>=<span class="string">"1"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:singleLine</span>=<span class="string">"true"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">android.support.design.widget.TextInputLayout</span>&gt;</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置密码可见性的按钮已经设置完成，下面来写显示错误的逻辑。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoginActivity</span> <span class="keyword">extends</span> <span class="title">BaseActivity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> EditText email;</span><br><span class="line">    <span class="keyword">private</span> EditText password;</span><br><span class="line">    <span class="keyword">private</span> Button login_btn;</span><br><span class="line">    <span class="keyword">private</span> TextInputLayout til_account;</span><br><span class="line">    <span class="keyword">private</span> TextInputLayout til_password;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(@Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//此处省略初始化界面和设置控件实例的代码</span></span><br><span class="line">        login_btn.setOnClickListener(<span class="keyword">new</span> OnClickListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                String emailText = email.getText().toString();</span><br><span class="line">                String passText = password.getText().toString();</span><br><span class="line">                <span class="keyword">if</span>(validateAccount(emailText) &amp; validatePassword(passText)</span><br><span class="line">                <span class="comment">//此处使用非短路与是因为有必要确保用户名和密码都得到检查，以便显示错误</span></span><br><span class="line">                )&#123;</span><br><span class="line">                    <span class="keyword">if</span>(emailText.equals(<span class="string">"xxx@yyy.com"</span>) &amp;&amp; passText.equals(<span class="string">"password"</span>))&#123;</span><br><span class="line">                        Intent intent = <span class="keyword">new</span> Intent(LoginActivity.<span class="keyword">this</span>, MainActivity.class);</span><br><span class="line">                        intent.putExtra(<span class="string">"username"</span>, emailText.substring(<span class="number">0</span>, emailText.indexOf(<span class="string">"@"</span>)));</span><br><span class="line">                        startActivity(intent);</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        Toast.makeText(LoginActivity.<span class="keyword">this</span>, <span class="string">"用户名或密码错误！"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 显示错误提示，并获取焦点</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> textInputLayout 要设置错误的TextInputLayout布局</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> error 要显示的错误提示</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">showError</span><span class="params">(TextInputLayout textInputLayout, String error)</span></span>&#123;</span><br><span class="line">        textInputLayout.setError(error);<span class="comment">//设置错误信息，注意此处只要error为非空则setErrorEnable()会自动设为true</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//确保可以设置焦点</span></span><br><span class="line">        textInputLayout.getEditText().setFocusable(<span class="keyword">true</span>);</span><br><span class="line">        textInputLayout.getEditText().setFocusableInTouchMode(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//（要求）获取焦点</span></span><br><span class="line">        textInputLayout.getEditText().requestFocus();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 验证用户名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> account 要验证的用户名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> boolean</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">validateAccount</span><span class="params">(String account)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(account == <span class="keyword">null</span> || account.equals(<span class="string">""</span>)</span><br><span class="line">        <span class="comment">//更严谨地检验空字符串</span></span><br><span class="line">        )&#123;</span><br><span class="line">            showError(til_account,<span class="string">"用户名不能为空"</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//检验正确别忘了取消错误显示</span></span><br><span class="line">        til_account.setErrorEnabled(<span class="keyword">false</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 验证密码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> password 要验证的密码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> boolean</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">validatePassword</span><span class="params">(String password)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//与验证用户名相似，此处省略</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>此处的几个知识点：</p>
+<ul>
+<li><code>View.setFocusable()</code>与<code>setFousableInTouchMode()</code>的区别：顾名思义，前者用于<strong>物理输入</strong>时，比如鼠标键盘和遥控器等，而后者用于触控模式。不过个人觉得有点奇怪，为什么要把二者分开呢？或者说为什么不让<code>setFocusable()</code>也设置触控模式为真呢？</li>
+<li>据官方文档，<code>TextInputLayout</code>与其下的EditText可能并非是直接的父子关系，而是<strong>隔有中间层</strong>，所以不能调用EditText.<code>getParent()</code>方法获取<code>TextInputLayout</code>。此处并未用到，只是一起总结一下。</li>
+<li><code>textInputLayout.setError(String)</code>方法用于设置错误信息，注意此处只要字符串非空则<code>setErrorEnable()</code>会<strong>自动设为<code>true</code></strong>。</li>
+<li>Java中检验空字符串的几个方法：<ul>
+<li><code>str == null || str.equals(&quot;&quot;)</code><strong>效率低</strong></li>
+<li><code>str == null || str == &quot;&quot;</code><strong>比较地址</strong>，效率高，慎用</li>
+<li><code>str == null || str.length() &lt;= 0</code>效率高</li>
+<li><code>str == null || str.isEmpty()</code>效率高，<strong>自Java SE 6.0支持</strong></li>
+</ul>
+</li>
+<li><code>TextView</code>也有类似的<code>setError</code>方法，不同的是它是在文本框右侧显示一张图片，并且<strong>弹出一个小弹窗显示设置的错误信息</strong>。</li>
+</ul>
+</li>
+<li>这时候登录界面的基本功能已经写好了，可以发现<code>TextInputLayout</code>提供的密码可见切换按钮在点击时还有动画，可以说是非常精致和贴心了。美中不足的是想要更新错误信息需要点击登录按钮才行，不是实时更新。更好的实现方式可以写成在<strong>焦点监听<code>OnFocusChangeListener</code>中</strong>更新，也可以写成在<strong>文本变化监听<code>TextWatcher</code>中</strong>更新。<h3 id="2-实现强制下线"><a href="#2-实现强制下线" class="headerlink" title="2.实现强制下线"></a>2.实现强制下线</h3></li>
+<li><p>接下来实现强制下线的逻辑。此处采用书中的框架，编写<code>BaseActivity</code>类来实现结束所有活动和弹出<code>AlertDialog</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> LocalBroadcastManager manager;</span><br><span class="line">    <span class="keyword">private</span> ForceOfflineReceiver receiver;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(@Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        ActivityCollector.addActivity(<span class="keyword">this</span>);</span><br><span class="line">        manager = LocalBroadcastManager.getInstance(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        ActivityCollector.removeActivity(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onResume</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onResume();</span><br><span class="line">        receiver = <span class="keyword">new</span> ForceOfflineReceiver();</span><br><span class="line">        manager.registerReceiver(receiver, <span class="keyword">new</span> IntentFilter(<span class="string">"com.example.zyf.broadcasttest2.FORCE_OFFLINE"</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPause</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onPause();</span><br><span class="line">        manager.unregisterReceiver(receiver);</span><br><span class="line">        receiver = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ForceOfflineReceiver</span> <span class="keyword">extends</span> <span class="title">BroadcastReceiver</span></span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceive</span><span class="params">(<span class="keyword">final</span> Context context, Intent intent)</span> </span>&#123;</span><br><span class="line">            AlertDialog.Builder builder = <span class="keyword">new</span> AlertDialog.Builder(BaseActivity.<span class="keyword">this</span>, R.style.Theme_AppCompat_Light_Dialog_Alert);</span><br><span class="line">            builder.setTitle(<span class="string">"强制下线警告"</span>);</span><br><span class="line">            builder.setCancelable(<span class="keyword">false</span>);</span><br><span class="line">            builder.setMessage(<span class="string">"您已被强制下线，请重新登录。"</span>);</span><br><span class="line">            builder.setPositiveButton(<span class="string">"好的"</span>, <span class="keyword">new</span> DialogInterface.OnClickListener() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(DialogInterface dialog, <span class="keyword">int</span> which)</span> </span>&#123;</span><br><span class="line">                    ActivityCollector.finishAll();</span><br><span class="line">                    Intent intent = <span class="keyword">new</span> Intent(context, LoginActivity.class);</span><br><span class="line">                    context.startActivity(intent);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            builder.show();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>显然一个应用里只需要一个<code>LocalBroadcastManager</code>（虽然经测试多个也完全没问题），并且只需要处于栈顶（因为要弹出<code>AlertDialog</code>）的活动接收广播。所以我将<code>LocalBroadcastManager</code>设为<code>static</code>，并且按照书中的想法把注册与取消注册接收器的逻辑放在<code>BaseActivity</code>的<code>onResume()</code>和<code>onPause()</code>方法中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> LocalBroadcastManager manager;</span><br><span class="line">    <span class="keyword">private</span> ForceOfflineReceiver receiver;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(@Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        ActivityCollector.addActivity(<span class="keyword">this</span>);</span><br><span class="line">        manager = LocalBroadcastManager.getInstance(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        ActivityCollector.removeActivity(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onResume</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onResume();</span><br><span class="line">        receiver = <span class="keyword">new</span> ForceOfflineReceiver();</span><br><span class="line">        manager.registerReceiver(receiver, <span class="keyword">new</span> IntentFilter(<span class="string">"com.example.zyf.broadcasttest2.FORCE_OFFLINE"</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPause</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onPause();</span><br><span class="line">        manager.unregisterReceiver(receiver);</span><br><span class="line">        receiver = <span class="keyword">null</span>;<span class="comment">//回收receiver引用的对象</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ForceOfflineReceiver</span> <span class="keyword">extends</span> <span class="title">BroadcastReceiver</span></span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceive</span><span class="params">(<span class="keyword">final</span> Context context, Intent intent)</span> </span>&#123;</span><br><span class="line">            AlertDialog.Builder builder = <span class="keyword">new</span> AlertDialog.Builder(BaseActivity.<span class="keyword">this</span>, R.style.Theme_AppCompat_Light_Dialog_Alert);</span><br><span class="line">            builder.setTitle(<span class="string">"强制下线警告"</span>);</span><br><span class="line">            builder.setCancelable(<span class="keyword">false</span>);</span><br><span class="line">            builder.setMessage(<span class="string">"您已被强制下线，请重新登录。"</span>);</span><br><span class="line">            builder.setPositiveButton(<span class="string">"好的"</span>, <span class="keyword">new</span> DialogInterface.OnClickListener() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(DialogInterface dialog, <span class="keyword">int</span> which)</span> </span>&#123;</span><br><span class="line">                    ActivityCollector.finishAll();</span><br><span class="line">                    Intent intent = <span class="keyword">new</span> Intent(context, LoginActivity.class);</span><br><span class="line">                    context.startActivity(intent);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            builder.show();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>==注意：==\<br>上面的<code>AlertDialog.Builder(Context, int)</code>中，<code>Context</code>只能是<code>Activity</code>，否则会报错：android.view.WindowManager$BadTokenException: Unable to add window – token null is not for an application。经过测试，直接使用<code>onReceive(Context, Intent)</code>中的<code>Context</code>属于<code>android.app.Application</code>，不是<code>Activity</code>类的。\<br>这个方法的另一个问题是，如果不用override的<code>(Context, int)</code>参数的方法可能报错：java.lang.IllegalStateException: You need to use a Theme.AppCompat theme (or descendant) with this activity.</p>
+</blockquote>
+<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><ul>
+<li>在学习过程中我又尝试了一下焦点监听和文本变化监听，发现文本变化监听虽然有3个方法，但是不是很难实现。而焦点监听则并没有想象中那么简单，需要彻底理清每一种情况下焦点变化的过程，否则很容易出错。并且单靠文本变化监听或焦点监听也不足以实现跟常见登录界面相似的检查功能。在Android Studio默认的LoginActivity中有很多代码，不过因为不感兴趣和时间有限，进度等原因没有深入探究。</li>
+</ul>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://zyfAndroid.com/2018/08/23/androidPractice2/" data-id="cjl6ec2zg000xi8svolyqstwa" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-google-plus"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/zzzyyf" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="weibo" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-weibo"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">Android实战记（一）——用ConnectivityManager管理网络连接</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/23/androidPractice2/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/23/androidPractice2/" class="title">Android实战记（二）——使用本地广播实现强制下线</a></p>
+                            <p class="item-date"><time datetime="2018-08-23T09:59:01.000Z" itemprop="datePublished">2018-08-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/" class="title">Android实战记（一）——用ConnectivityManager管理网络连接</a></p>
+                            <p class="item-date"><time datetime="2018-08-15T02:39:57.000Z" itemprop="datePublished">2018-08-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/14/Android第六课——活动的生命周期/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://raw.githubusercontent.com/zzzyyf/C-Codes/master/activity_lifecycle.png)" alt="Android第六课——活动的生命周期" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/14/Android第六课——活动的生命周期/" class="title">Android第六课——活动的生命周期</a></p>
+                            <p class="item-date"><time datetime="2018-08-14T01:52:21.000Z" itemprop="datePublished">2018-08-14</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/13/Android第第第五课——进阶组件之Intent初探/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/13/Android第第第五课——进阶组件之Intent初探/" class="title">Android第五课——进阶组件之Intent初探</a></p>
+                            <p class="item-date"><time datetime="2018-08-13T02:58:46.000Z" itemprop="datePublished">2018-08-13</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/13/Android第四课——进阶组件之Toast与菜单/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/13/Android第四课——进阶组件之Toast与菜单/" class="title">Android第四课——进阶组件之Toast与菜单</a></p>
+                            <p class="item-date"><time datetime="2018-08-13T02:54:08.000Z" itemprop="datePublished">2018-08-13</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">9</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AlertDialog/">AlertDialog</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Broadcast/">Broadcast</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ConnectivityManager/">ConnectivityManager</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Handler/">Handler</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Intent/">Intent</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NetworkCallback/">NetworkCallback</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TextInputLayout/">TextInputLayout</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Toast/">Toast</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logcat/">logcat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/字符串/">字符串</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实战/">实战</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程/">工程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/本地广播/">本地广播</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生命周期/">生命周期</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第一课/">第一课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第三课/">第三课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第二课/">第二课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第五课/">第五课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第六课/">第六课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第四课/">第四课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/结构/">结构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络/">网络</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/菜单/">菜单</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/资源/">资源</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/AlertDialog/" style="font-size: 10px;">AlertDialog</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Broadcast/" style="font-size: 10px;">Broadcast</a> <a href="/tags/ConnectivityManager/" style="font-size: 10px;">ConnectivityManager</a> <a href="/tags/Handler/" style="font-size: 10px;">Handler</a> <a href="/tags/Intent/" style="font-size: 10px;">Intent</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/NetworkCallback/" style="font-size: 10px;">NetworkCallback</a> <a href="/tags/TextInputLayout/" style="font-size: 10px;">TextInputLayout</a> <a href="/tags/Toast/" style="font-size: 10px;">Toast</a> <a href="/tags/logcat/" style="font-size: 10px;">logcat</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/实战/" style="font-size: 15px;">实战</a> <a href="/tags/工程/" style="font-size: 10px;">工程</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/本地广播/" style="font-size: 10px;">本地广播</a> <a href="/tags/生命周期/" style="font-size: 10px;">生命周期</a> <a href="/tags/第一课/" style="font-size: 10px;">第一课</a> <a href="/tags/第三课/" style="font-size: 10px;">第三课</a> <a href="/tags/第二课/" style="font-size: 10px;">第二课</a> <a href="/tags/第五课/" style="font-size: 10px;">第五课</a> <a href="/tags/第六课/" style="font-size: 10px;">第六课</a> <a href="/tags/第四课/" style="font-size: 10px;">第四课</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/结构/" style="font-size: 10px;">结构</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/菜单/" style="font-size: 10px;">菜单</a> <a href="/tags/资源/" style="font-size: 10px;">资源</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2018 Winfrid Zhao</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'http://zyfAndroid.com/2018/08/23/androidPractice2/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
