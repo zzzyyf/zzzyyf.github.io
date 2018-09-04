@@ -6,26 +6,26 @@
     
 
     
-    <title>Android第六课——活动的生命周期 | 从0.1开始学Android</title>
+    <title>Android实战记（三）——实现弹出日期选择对话框 | 从0.1开始学Android</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="Android,第六课,Activity,生命周期" />
+        <meta name="keywords" content="Android,实战,DialogFragment,DatePickerDialog,回调,Fragment Lifecycle" />
     
-    <meta name="description" content="活动的生命周期返回栈Android使用任务(Task)来管理活动。一个任务就是一组存放在栈里的活动的集合，这个栈也被称作返回栈(Back Stack)。启动新活动时，该活动入栈，居于栈顶。按下Back键或调用finish()方法销毁活动时，处于栈顶的活动出栈，前一个入栈的活动居于栈顶。系统总是显示处于栈顶的活动给用户。 活动状态每个活动在生命周期内最多有4种状态。  运行状态：活动位于返回栈栈顶时">
-<meta name="keywords" content="Android,第六课,Activity,生命周期">
+    <meta name="description" content="这次同学提出了一个问题，他没搞懂怎么利用DatePicker实现弹出窗口选择日期的逻辑。于是我看了看官方文档，发现官方对使用Picker专门写了一篇指南。有指南当然是最好了。这篇指南里还有弹出窗口选择时间的例子，跟选择日期的例子很相近，此处不赘述了。 之前已经学习过使用AlertDialog，而此次的DatePickerDialog就继承于AlertDialog，本来感觉会与其有很多相似之处，但其">
+<meta name="keywords" content="Android,实战,DialogFragment,DatePickerDialog,回调,Fragment Lifecycle">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android第六课——活动的生命周期">
-<meta property="og:url" content="http://zyfAndroid.com/2018/08/14/Android第六课——活动的生命周期/index.html">
+<meta property="og:title" content="Android实战记（三）——实现弹出日期选择对话框">
+<meta property="og:url" content="http://zyfAndroid.com/2018/09/04/AndroidPractice3/index.html">
 <meta property="og:site_name" content="从0.1开始学Android">
-<meta property="og:description" content="活动的生命周期返回栈Android使用任务(Task)来管理活动。一个任务就是一组存放在栈里的活动的集合，这个栈也被称作返回栈(Back Stack)。启动新活动时，该活动入栈，居于栈顶。按下Back键或调用finish()方法销毁活动时，处于栈顶的活动出栈，前一个入栈的活动居于栈顶。系统总是显示处于栈顶的活动给用户。 活动状态每个活动在生命周期内最多有4种状态。  运行状态：活动位于返回栈栈顶时">
+<meta property="og:description" content="这次同学提出了一个问题，他没搞懂怎么利用DatePicker实现弹出窗口选择日期的逻辑。于是我看了看官方文档，发现官方对使用Picker专门写了一篇指南。有指南当然是最好了。这篇指南里还有弹出窗口选择时间的例子，跟选择日期的例子很相近，此处不赘述了。 之前已经学习过使用AlertDialog，而此次的DatePickerDialog就继承于AlertDialog，本来感觉会与其有很多相似之处，但其">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/zzzyyf/C-Codes/master/activity_lifecycle.png">
-<meta property="og:updated_time" content="2018-08-14T02:10:06.256Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/zzzyyf/C-Codes/master/fragment_lifecycle.png">
+<meta property="og:updated_time" content="2018-09-04T15:28:21.943Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android第六课——活动的生命周期">
-<meta name="twitter:description" content="活动的生命周期返回栈Android使用任务(Task)来管理活动。一个任务就是一组存放在栈里的活动的集合，这个栈也被称作返回栈(Back Stack)。启动新活动时，该活动入栈，居于栈顶。按下Back键或调用finish()方法销毁活动时，处于栈顶的活动出栈，前一个入栈的活动居于栈顶。系统总是显示处于栈顶的活动给用户。 活动状态每个活动在生命周期内最多有4种状态。  运行状态：活动位于返回栈栈顶时">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/zzzyyf/C-Codes/master/activity_lifecycle.png">
+<meta name="twitter:title" content="Android实战记（三）——实现弹出日期选择对话框">
+<meta name="twitter:description" content="这次同学提出了一个问题，他没搞懂怎么利用DatePicker实现弹出窗口选择日期的逻辑。于是我看了看官方文档，发现官方对使用Picker专门写了一篇指南。有指南当然是最好了。这篇指南里还有弹出窗口选择时间的例子，跟选择日期的例子很相近，此处不赘述了。 之前已经学习过使用AlertDialog，而此次的DatePickerDialog就继承于AlertDialog，本来感觉会与其有很多相似之处，但其">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/zzzyyf/C-Codes/master/fragment_lifecycle.png">
     
 
     
@@ -142,14 +142,14 @@
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-Android第六课——活动的生命周期" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-AndroidPractice3" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        Android第六课——活动的生命周期
+        Android实战记（三）——实现弹出日期选择对话框
         </h1>
     
 
@@ -159,79 +159,88 @@
             <div class="article-meta">
                 
     <div class="article-date">
-        <a href="/2018/08/14/Android第六课——活动的生命周期/" class="article-date">
-            <time datetime="2018-08-14T01:52:21.000Z" itemprop="datePublished">2018-08-14</time>
+        <a href="/2018/09/04/AndroidPractice3/" class="article-date">
+            <time datetime="2018-09-04T15:20:08.000Z" itemprop="datePublished">2018-09-04</time>
         </a>
     </div>
 
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Activity/">Activity</a>, <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/生命周期/">生命周期</a>, <a class="tag-link" href="/tags/第六课/">第六课</a>
+        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/DatePickerDialog/">DatePickerDialog</a>, <a class="tag-link" href="/tags/DialogFragment/">DialogFragment</a>, <a class="tag-link" href="/tags/Fragment-Lifecycle/">Fragment Lifecycle</a>, <a class="tag-link" href="/tags/回调/">回调</a>, <a class="tag-link" href="/tags/实战/">实战</a>
     </div>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
-            <h3 id="活动的生命周期"><a href="#活动的生命周期" class="headerlink" title="活动的生命周期"></a>活动的生命周期</h3><h4 id="返回栈"><a href="#返回栈" class="headerlink" title="返回栈"></a>返回栈</h4><p>Android使用<strong>任务</strong>(Task)来管理活动。一个任务就是一组存放在栈里的活动的集合，这个栈也被称作<strong>返回栈</strong>(Back Stack)。启动新活动时，该活动入栈，居于栈顶。按下Back键或调用<code>finish()</code>方法销毁活动时，处于栈顶的活动出栈，前一个入栈的活动居于栈顶。系统总是显示处于栈顶的活动给用户。</p>
-<h4 id="活动状态"><a href="#活动状态" class="headerlink" title="活动状态"></a>活动状态</h4><p>每个活动在生命周期内最多有4种状态。</p>
+            <p>这次同学提出了一个问题，他没搞懂怎么利用DatePicker实现弹出窗口选择日期的逻辑。于是我看了看<a href="https://developer.android.google.cn/reference/android/app/DatePickerDialog" target="_blank" rel="noopener">官方文档</a>，发现官方对使用Picker专门写了一篇<a href="https://developer.android.google.cn/guide/topics/ui/controls/pickers" target="_blank" rel="noopener">指南</a>。有指南当然是最好了。这篇指南里还有弹出窗口选择<strong>时间</strong>的例子，跟选择日期的例子很相近，此处不赘述了。</p>
+<p>之前已经学习过使用<code>AlertDialog</code>，而此次的<code>DatePickerDialog</code>就继承于<code>AlertDialog</code>，本来感觉会与其有很多相似之处，但其实差距还是挺大的。因为指南中推荐使用<code>DialogFragment</code>来容纳（？原文为host，不知道该怎么翻译）<code>DatePickerDialog</code>或<code>TimePickerDialog</code>，因为</p>
+<blockquote>
+<p><code>DialogFragment</code>能帮你管理对话框的生命周期，并且允许你在不同的布局配置中显示Picker，如在手机中的基本对话框中或者是在大屏幕里作为布局的一部分嵌入。（说白了就是说Fragment的好处嘛）</p>
+</blockquote>
+<p>然而我看《第一行代码》的时候以为碎片不重要就跳过了。。。没想到现在就要还上一点了。还就还吧~</p>
+<h3 id="配置DialogFragment"><a href="#配置DialogFragment" class="headerlink" title="配置DialogFragment"></a>配置<code>DialogFragment</code></h3><p>前面已经说过<code>DatePickerDialog</code>要在<code>DialogFragment</code>中容纳，自然要创建一个<code>DialogFragment</code>。</p>
 <ul>
-<li>运行状态：活动<strong>位于返回栈栈顶</strong>时。系统最不愿意回收这种状态的活动。</li>
-<li>暂停状态：活动<strong>不再处于栈顶</strong>但<strong>依然可见</strong>时（比如处在对话框活动之下的活动）。系统也不愿意回收此类活动。</li>
-<li>停止状态：活动<strong>不在栈顶且完全不可见</strong>时。系统仍会为其保存相应的状态和成员变量，但当需要内存时有可能会被系统回收。</li>
-<li>销毁状态：活动<strong>从返回栈移除</strong>后。系统最倾向于回收此类活动。</li>
+<li>创建<code>DialogFragment</code>的子<code>Fragment</code>，实现<code>DatePickerDialog.OnDateSetListener</code>接口</li>
+<li>覆盖<code>onCreateDialog(Bundle)</code>方法，因为要选择日期，所以要给一个默认值：<ul>
+<li>使用<code>Calendar.getInstance()</code>获取一个表示当前时间的<code>Calendar</code>对象</li>
+<li>调用<code>calendar.get(int)</code>取出对应的年、月、日</li>
+<li><code>return new DatePickerDialog(getActivity(), listener, year, month, day)</code>来创建<code>DatePickerDialog</code>（listener是上面实现的接口的实例，当然是this，也就是这个<code>Dialog</code>。year/month/day是用来设置初始值的）</li>
 </ul>
-<h4 id="活动生存期"><a href="#活动生存期" class="headerlink" title="活动生存期"></a>活动生存期</h4><p><code>Activity</code>类中提供了7个回调方法，可将活动的生命周期分成3个生存期。</p>
-<ul>
-<li><strong>完整</strong>生存期：在<strong>创建新活动时</strong>调用的<code>onCreate()</code>方法和<strong>销毁活动时</strong>调用的<code>onDestory()</code>方法之间的周期。</li>
-<li><strong>可见</strong>生存期：活动在<strong>由不可见变为可见时</strong>调用<code>onStart()</code>方法和在<strong>完全不可见</strong>时调用<code>onStop()</code>方法之间的周期。</li>
-<li><strong>前台</strong>生存期：活动在<strong>处于运行状态，准备好与用户交互时</strong>调用<code>onResume()</code>方法与<strong>活动被挂起，系统准备去启动或恢复另一活动时</strong>调用<code>onPause()</code>方法之间的周期。<code>onPause()</code>方法中通常释放一些消耗CPU的资源，保存一些关键数据，但方法执行速度一定要快。</li>
-<li><code>onRestart()</code>方法负责把活动从<strong>停止状态</strong>恢复为<strong>运行状态</strong>，即从<code>onStop()</code>后的活动执行，之后会执行<code>onStart()</code>方法。</li>
+</li>
+<li>实现<code>OnDateSetListener</code>接口的<code>onDateSet()</code>方法，此处是时间设定完成后调用，理所当然地要在这里传回设置好的数据。查阅了很多资料，对于<code>Fragment</code>给<code>Activity</code>传递数据都推荐使用<strong>实现接口+回调方法</strong>来实现，因为<code>DialogFragment</code>提供了<code>onAttach(Context)</code>方法来获取父<code>Activity</code>，不用白不用。这里简单解释一下何为回调，简单地说就是<ul>
+<li>A持有对B的引用</li>
+<li>在A中使用B</li>
+<li>B中也持有对A的引用</li>
+<li>使用完B后在B中回去使用A。</li>
 </ul>
-<p><img src="https://raw.githubusercontent.com/zzzyyf/C-Codes/master/activity_lifecycle.png" alt="image"></p>
-<h4 id="在活动被回收前保存临时数据"><a href="#在活动被回收前保存临时数据" class="headerlink" title="在活动被回收前保存临时数据"></a>在活动被回收前保存临时数据</h4><ul>
-<li><code>Activity</code>类中提供了一个<code>onSaveInstanceState()</code>回调方法，该方法可以保证在活动被回收之前一定会被调用。</li>
-<li>该方法会携带一个<code>Bundle</code>类型的参数。<code>Bundle</code>提供了一系列方法用于保存数据，比如用<code>putString()</code>方法保存字符串，用<code>putInt()</code>方法保存整形数据，以此类推。</li>
-<li>每个保存方法需要两个参数：键，相当于成员名，变量名，用于之后从<code>Bundle</code>中取值；第二个参数是要保存的值。</li>
-<li>只需在<code>onCreate()</code>方法中传入之前保存的<code>Bundle</code>就可以在方法中取出之前保存的值。</li>
-<li>可以把<code>Bundle</code>存放在<code>Intent</code>里实现跨活动传递数据。</li>
+</li>
+<li>最后一步就称为回调。此例中，父<code>Activity</code>持有对<code>DialogFragment</code>的引用，然后在<code>Activity</code>中创建<code>DialogFragment</code>，获取了用户设置的日期后再回调父<code>Activity</code>将日期返回。<ul>
+<li>定义传回数据用的接口i.e.<code>SendDate</code>和方法</li>
 </ul>
-<h4 id="活动的启动模式"><a href="#活动的启动模式" class="headerlink" title="活动的启动模式"></a>活动的启动模式</h4><ul>
-<li>主要是决定返回栈与返回栈中活动实例个数的设置，一共有四种，分别是standard,singleTop,singleTask,singleInstance，可以在<code>AndroidManifest.xml</code>中通过给<code>&lt;activity&gt;</code>标签指定<code>android:launchMode</code>属性选择启动模式。</li>
-<li>standard模式下，每当启动一个新的活动，系统就会创建一个新的实例，它会入栈且处于栈顶。换句话说，standard模式对活动在返回栈中的<strong>唯一性不做任何保证。</strong></li>
-<li>用<code>this.toString()</code>方法可以把当前活动实例转换成字符串。</li>
-<li>singleTop模式下，在启动活动时如果发现返回栈<strong>栈顶已经是该活动的一个实例</strong>则不再启动新活动。</li>
-<li>singleTask模式下，在启动活动时如果发现<strong>返回栈中</strong>存在该活动实例则将<strong>其上所有活动都出栈使其置顶</strong>。<blockquote>
-<ul>
-<li>实际上我们在使用时发现，对于设置了”singleTask”启动模式的Activity，它在启动的时候，会先检测系统中属性值affinity等于它的属性值<code>taskAffinity</code>的task是否存在；如果存在这样的task，它就会在这个task中启动，否则就开启一个新的task。而<code>taskAffinity</code>默认情况下是应用的包名，即默认时并不会新建一个task。</li>
-<li>因此，如果我们想要设置了”singleTask”启动模式的Activity在新的task中启动，就要为它设置一个独立的<code>taskAffinity</code>属性值。下面的代码中，应用程序的包名是com.fred.testactivity，我们将BActivity的启动模式设置成singleTask, 同时设置其taskAffinity属性为com.fred.testactivity.BActivity 。当BActivity启动时，会发现多了一个task 。代码如下：<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">".BActivity"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:label</span>=<span class="string">"@string/title_activity_b"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:launchMode</span>=<span class="string">"singleTask"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:taskAffinity</span>=<span class="string">"com.fred.testactivity.BActivity"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>因为要回调<code>Activity</code>的方法，肯定要持有<code>Activity</code>对象引用，且要在<code>DialogFragment</code>的生命周期结束时将引用释放，免得<code>Activity</code>回收时出现错误。<ul>
+<li>在<code>onAttach()</code>方法中获取父<code>Activity</code>并判断是否实现<code>SendDate</code>接口</li>
+<li>在<code>onDetach()</code>方法中释放对付<code>Activity</code>的引用<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DatePickerFragment</span> <span class="keyword">extends</span> <span class="title">DialogFragment</span> <span class="keyword">implements</span> <span class="title">DatePickerDialog</span>.<span class="title">OnDateSetListener</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">SendDate</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendDate</span><span class="params">(<span class="keyword">int</span> year, <span class="keyword">int</span> month, <span class="keyword">int</span> day)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> SendDate listener;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Dialog <span class="title">onCreateDialog</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Use the current date as the default date in the picker</span></span><br><span class="line">        <span class="keyword">final</span> Calendar c = Calendar.getInstance();</span><br><span class="line">        <span class="keyword">int</span> year = c.get(Calendar.YEAR);</span><br><span class="line">        <span class="keyword">int</span> month = c.get(Calendar.MONTH);</span><br><span class="line">        <span class="keyword">int</span> day = c.get(Calendar.DAY_OF_MONTH);</span><br><span class="line">        <span class="comment">// Create a new instance of DatePickerDialog and return it</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> DatePickerDialog(getActivity(), <span class="keyword">this</span>, year, month, day);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDateSet</span><span class="params">(DatePicker view, <span class="keyword">int</span> year, <span class="keyword">int</span> month, <span class="keyword">int</span> day)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Do something with the date chosen by the user</span></span><br><span class="line">        listener.sendDate(year, month, day);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAttach</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onAttach(context);</span><br><span class="line">        <span class="keyword">if</span> (context <span class="keyword">instanceof</span> SendDate)&#123;</span><br><span class="line">            listener = (SendDate)context;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Activity must implement SendDate"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDetach</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDetach();</span><br><span class="line">        listener = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li>此处再简单介绍一下<code>DialogFragment</code>的生命周期：<br><img src="https://raw.githubusercontent.com/zzzyyf/C-Codes/master/fragment_lifecycle.png" alt="Fragment Lifecycle"><ul>
+<li><code>onAttach()</code>中传入要attach的<code>Activity</code>实例，使得<code>DialogFragment</code>中可以调用<code>Activity</code>中的方法</li>
+<li><code>onCreate()</code>中可以对对话框的样式进行设置</li>
+<li><code>onCreateDialog()</code>中设置对对话框的监听</li>
+<li><code>onCreateView()</code>中初始化<code>View</code>，并对<code>SavedInstanceState</code>进行解析</li>
+<li><code>onPause()</code>：用户离开片段的第一个信号。通常应该在此方法内确认在当前用户会话结束后仍然有效的任何更改（因为用户可能不会返回）<blockquote>
+<p>其他知识点：</p>
+<ul>
+<li><code>instanceof</code>运算符用以判断某对象是否为某类的实例。</li>
+</ul>
 </blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="配置MainActivity"><a href="#配置MainActivity" class="headerlink" title="配置MainActivity"></a>配置<code>MainActivity</code></h3><ul>
+<li>首先需要一个显示读取到的日期的控件，此处选择最简单的TextView。<strong>此处不能忘了初始化Text</strong>。为了方便测试起见，需要给<code>DatePickerDialog</code>设置一个触发器，这里选择按钮+点击监听。</li>
+<li>在点击按钮以后，需要做的事是：<ul>
+<li>新建一个上面自己写的<code>DialogFragment</code>子类对象；</li>
+<li>构建<code>DatePickerDialog</code>并显示；</li>
+<li>实现上面写的回调接口。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">FragmentActivity</span> <span class="keyword">implements</span> <span class="title">DatePickerFragment</span>.<span class="title">SendDate</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> TextView dateText;</span><br><span class="line">    <span class="keyword">private</span> Button requireDate;</span><br><span class="line">    <span class="keyword">private</span> DatePickerFragment fragment = <span class="keyword">new</span> DatePickerFragment();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> year;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> month;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> day;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">final</span> Calendar calendar = Calendar.getInstance();</span><br><span class="line">        year = calendar.get(Calendar.YEAR);</span><br><span class="line">        month = calendar.get(Calendar.MONTH)+<span class="number">1</span>;</span><br><span class="line">        day = calendar.get(Calendar.DAY_OF_MONTH);</span><br><span class="line">        dateText.setText(String.format(<span class="string">"%d-%d-%d"</span>, year, month, day));</span><br><span class="line">        requireDate.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                fragment.show(getSupportFragmentManager(), <span class="string">"dataPicker"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDate</span><span class="params">(<span class="keyword">int</span> year, <span class="keyword">int</span> month, <span class="keyword">int</span> day)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.year = year;</span><br><span class="line">        <span class="keyword">this</span>.month = month+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">this</span>.day = day;</span><br><span class="line">        dateText.setText(String.format(<span class="string">"%d-%d-%d"</span>, <span class="keyword">this</span>.year, <span class="keyword">this</span>.month, <span class="keyword">this</span>.day));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendDate</span><span class="params">(<span class="keyword">int</span> year, <span class="keyword">int</span> month, <span class="keyword">int</span> day)</span> </span>&#123;</span><br><span class="line">        setDate(year, month, day);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 </li>
 </ul>
 <blockquote>
-<p>==注== 此时该活动实例将会从停止/暂停状态恢复至运行状态，注意与活动生命周期结合理解。</p>
+<p>其他知识点：</p>
 <ul>
-<li>singleInstance模式下，在整个系统中都只存在一个实例，因为<strong>系统会为该活动实例创建一个单独的返回栈</strong>。</li>
-<li>使用<code>getTaskId()</code>可以获取当前任务ID的字符串。</li>
+<li><code>calendar.get(Calendar.MONTH)</code>方法取得的月份是从0开始的。<strong>如果不用一些格式化手段直接用<code>int</code>显示的话，需要+1</strong>。（在初始化<code>DatePickerDialog</code>的时候并没有+1，但是月份是正常的，推测是用了其他手段，看了源码没有头绪。。）</li>
+<li>如果在自己写的<code>DialogFragment</code>的子类里导入的是<code>android.support.v4.app.DialogFragment</code>的话，在活动中初始化对话框时就要用<code>show(getSupportFragmentManager(), String)</code>方法；如果导入的是<code>android.app.DialogFragment</code>的话，就要用<code>show(getFragmentManager(), String)</code>方法。</li>
 </ul>
 </blockquote>
-<h4 id="关于活动的技巧"><a href="#关于活动的技巧" class="headerlink" title="关于活动的技巧"></a>关于活动的技巧</h4><h5 id="知道当前界面对应的活动"><a href="#知道当前界面对应的活动" class="headerlink" title="知道当前界面对应的活动"></a>知道当前界面对应的活动</h5><ul>
-<li>用一个普通Java类作为<code>AppCompatAvtivity</code>的父类(e.g.<code>BaseActivity</code>)，再让所有活动都继承该类，在该类中重写<code>onCreate()</code>方法，打印一条以<code>getClass().getSimpleName()</code>作为内容的日志即可。<code>getSimpleName()</code>为获取当前类的简写名。</li>
-</ul>
-<h5 id="随时随地退出程序"><a href="#随时随地退出程序" class="headerlink" title="随时随地退出程序"></a>随时随地退出程序</h5><ul>
-<li>新建一个<code>Activity</code>列表类，在其中写添加、去除Activity项以及<strong>借助<code>finish()</code>方法</strong>来<strong>结束列表中所有Activity</strong>的<strong>静态</strong>方法（e.g.<code>finishAll()</code>，静态是为了无需创建列表的实例）</li>
-<li>在之前的<code>BaseActivity</code>中重写<code>onCreate()</code>和<code>onDestroy()</code>方法，加入在列表中添加、删除活动的方法调用。</li>
-<li>接下来只需在需要结束所有活动的地方调用<code>finishAll()</code>方法即可。</li>
-<li>也可以在<code>finishAll()</code>方法后加上杀掉当前进程的代码保证程序完全退出<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">android.os.Process.killProcess(android.os.Process.myPid());</span><br><span class="line"><span class="comment">//killProcess()方法只能杀掉自己</span></span><br><span class="line"><span class="comment">//通过myPid()方法获取当前进程的id</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h5 id="启动活动的更好方法"><a href="#启动活动的更好方法" class="headerlink" title="启动活动的更好方法"></a>启动活动的更好方法</h5><ul>
-<li>在<strong>活动</strong>中自己写一个<code>actionStart()</code>方法，在方法中通过传入的参数完成构建启动活动的Intent和调用<code>startActivity()</code>。</li>
-<li>这样的好处在于可以清楚地看到需要传递的数据有哪些，而且在需要启动活动时只需调用该方法，无需再自己创建Intent等。</li>
-</ul>
 
         </div>
         <footer class="article-footer">
@@ -239,7 +248,7 @@
 
 
 
-    <a data-url="http://zyfAndroid.com/2018/08/14/Android第六课——活动的生命周期/" data-id="cjlnvcgy1000qngsvbrfyaaot" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://zyfAndroid.com/2018/09/04/AndroidPractice3/" data-id="cjlnvcgwv0000ngsvxai24ico" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -376,20 +385,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            Android实战记（一）——用ConnectivityManager管理网络连接
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2018/08/13/Android第第第五课——进阶组件之Intent初探/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/08/23/androidPractice2/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">Android第五课——进阶组件之Intent初探</p>
+        <p class="article-nav-title">Android实战记（二）——使用本地广播实现强制下线</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -596,7 +595,7 @@
     var disqus_shortname = 'hexo-theme-hueman';
     
     
-    var disqus_url = 'http://zyfAndroid.com/2018/08/14/Android第六课——活动的生命周期/';
+    var disqus_url = 'http://zyfAndroid.com/2018/09/04/AndroidPractice3/';
     
     (function() {
     var dsq = document.createElement('script');
