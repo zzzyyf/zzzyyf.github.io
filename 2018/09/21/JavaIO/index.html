@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>Java I/O简要笔记（一）——基础部分 | 从0.1开始学Android</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Java,I/O,Writer" />
+    
+    <meta name="description" content="因为以Android开发为主要目的，本篇博客的主要参考资料为Android Developers的文档。  Java I/O基础Java I/O主要包括如下几个层次，包含三个部分：  流式部分――I/O的主体部分； 非流式部分――主要包含一些辅助流式部分的类，如：File类、RandomAccessFile类和FileDescriptor等类； 其他类–文件读取部分的与安全相关的类，如：Seri">
+<meta name="keywords" content="Java,I&#x2F;O,Writer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java I&#x2F;O简要笔记（一）——基础部分">
+<meta property="og:url" content="http://zyfAndroid.com/2018/09/21/JavaIO/index.html">
+<meta property="og:site_name" content="从0.1开始学Android">
+<meta property="og:description" content="因为以Android开发为主要目的，本篇博客的主要参考资料为Android Developers的文档。  Java I/O基础Java I/O主要包括如下几个层次，包含三个部分：  流式部分――I/O的主体部分； 非流式部分――主要包含一些辅助流式部分的类，如：File类、RandomAccessFile类和FileDescriptor等类； 其他类–文件读取部分的与安全相关的类，如：Seri">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/zzzyyf/C-Codes/master/IOStreamHierarchy.png">
+<meta property="og:updated_time" content="2018-09-28T16:09:52.792Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java I&#x2F;O简要笔记（一）——基础部分">
+<meta name="twitter:description" content="因为以Android开发为主要目的，本篇博客的主要参考资料为Android Developers的文档。  Java I/O基础Java I/O主要包括如下几个层次，包含三个部分：  流式部分――I/O的主体部分； 非流式部分――主要包含一些辅助流式部分的类，如：File类、RandomAccessFile类和FileDescriptor等类； 其他类–文件读取部分的与安全相关的类，如：Seri">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/zzzyyf/C-Codes/master/IOStreamHierarchy.png">
+    
+
+    
+        <link rel="alternate" href="/" title="从0.1开始学Android" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">zyf的Android学习笔记</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                        
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    未分类
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-JavaIO" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        Java I/O简要笔记（一）——基础部分
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2018/09/21/JavaIO/" class="article-date">
+            <time datetime="2018-09-21T14:09:53.000Z" itemprop="datePublished">2018-09-21</time>
+        </a>
+    </div>
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/I-O/">I/O</a>, <a class="tag-link" href="/tags/Java/">Java</a>, <a class="tag-link" href="/tags/Writer/">Writer</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>因为以Android开发为主要目的，本篇博客的主要参考资料为Android Developers的文档。</p>
+</blockquote>
+<h1 id="Java-I-O基础"><a href="#Java-I-O基础" class="headerlink" title="Java I/O基础"></a>Java I/O基础</h1><p>Java I/O主要包括如下几个层次，包含三个部分：</p>
+<ol>
+<li>流式部分――I/O的主体部分；</li>
+<li>非流式部分――主要包含一些辅助流式部分的类，如：<code>File</code>类、<code>RandomAccessFile</code>类和<code>FileDescriptor</code>等类；</li>
+<li>其他类–文件读取部分的与安全相关的类，如：<code>SerializablePermission</code>类，以及与本地操作系统相关的文件系统的类，如：<code>FileSystem</code>类和<code>Win32FileSystem</code>类和<code>WinNTFileSystem</code>类。<h2 id="流"><a href="#流" class="headerlink" title="流"></a>流</h2><img src="https://raw.githubusercontent.com/zzzyyf/C-Codes/master/IOStreamHierarchy.png" alt="IOStream Hierarchy"></li>
+</ol>
+<ul>
+<li>Java把<strong>数据传输这件事</strong>称为流。</li>
+<li>Java 中的 I/O流类分为输入和输出部分。通过继承<code>InputStream</code>或<code>Reader</code>的类都有<code>read()</code>方法，它可以读取单个字节或者字节数组。而继承<code>OutputStream</code>或 <code>Writer</code>的类都有<code>write()</code>方法，它可以写入单个字节或者字节数组。一般通过组合多个对象来提供我们期望的功能（装饰器模式）。</li>
+<li>Java的IO模型设计非常优秀，它使用Decorator(装饰器)模式，按功能划分Stream，可以动态装配这些Stream，以便获得需要的功能。例如，若需要一个具有缓冲的文件输入流，则应当组合使用<code>FileInputStream</code>和<code>BufferedInputStream</code>。 </li>
+<li>Java中的<code>InputStream</code>与<code>OutputSream</code>提供基于<strong>字节</strong>的IO操作。</li>
+<li>Java中的<code>Reader</code>与<code>Writer</code>以面向<strong>Unicode字符</strong>(16位，2个字节)的方式提供I/O功能。<strong>字符流的本质是基于字节流I/O时（调用了转换器）查了对应的码表</strong>。可以使用<code>InputStreamReader</code>以及<code>OutputStreamWriter</code><strong>适配器</strong>将字符流转化为字节流。<blockquote>
+<p>==Tips:==<strong>适配器</strong>是连接不匹配的二者，让以上两者变匹配的对象。此处的两个适配器要把字符流转化为字节流，所以要在具备基础IO功能的基础上实现最基础的字符流的功能，而恰好<code>Reader</code>和<code>Writer</code>类是最基础的字符流，所以可以通过实现<code>InputStream</code>或<code>OutputStream</code>实现的接口+继承<code>Reader</code>或<code>Writer</code>类来实现转换。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="字符流"><a href="#字符流" class="headerlink" title="字符流"></a>字符流</h3><h4 id="Reader类"><a href="#Reader类" class="headerlink" title="Reader类"></a><code>Reader</code>类</h4><ul>
+<li><h4 id="Writer类"><a href="#Writer类" class="headerlink" title="Writer类"></a><code>Writer</code>类</h4></li>
+<li>使用<strong>字符</strong>输出所用的<strong>抽象</strong>类，以下是子类必须实现的方法：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">char</span>[], <span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>;<span class="comment">//输出给定字符数组中从int起的int个字符</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">flush</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">//用于flush整条流。当本Writer在缓冲区里保存了字符时，立即将保存的字符都写入目的地，并且若目的地也是流，也flush它，由此可知flush()方法会清空整条流上的所有缓冲区</span></span><br><span class="line"><span class="comment">//若目的地为文件，则flush方法保证缓冲区中的字符都交给操作系统作写入处理，但不保证字符确实被写入物理存储设备</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span></span>;<span class="comment">//关闭本流，关闭前先flush它</span></span><br><span class="line"><span class="comment">//对已经关闭的流执行write()或flush()方法会导致抛出IOException</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h5 id="OutputStreamWriter"><a href="#OutputStreamWriter" class="headerlink" title="OutputStreamWriter"></a><code>OutputStreamWriter</code></h5><ul>
+<li>如前文所述是字符流转为字节流的适配器，<strong>可以指定编码或编码器</strong>，否则使用平台默认编码；未指定编码器时，对于无法映射的Unicode字符组统一使用编码的<strong>默认替代字符</strong>来替代。</li>
+<li>在将字符转为字节时，亦如前文所述，会调用转换器进行字符与字节的转换。而<code>OutputStreamWriter</code>会在向底层输出流写入转换完成的字符前将其<strong>存入缓冲区</strong>，减少了写入操作频率，提升效率。<strong>注意：输入的字符没有缓冲</strong>。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">OutputStreamWriter</span><span class="params">(OutputStream)</span></span></span><br><span class="line"><span class="function"><span class="comment">//可选重载参数：String charsetName, 指定的编码名；Charset csn, 指定的编码；</span></span></span><br><span class="line"><span class="function"><span class="comment">//CharsetEncoder enc, 指定的编码器</span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>==Tips:== 因为输入<code>OutputStreamWriter</code>的字符没有经过缓冲，为了实现最佳性能，推荐使用时在<code>OutputStreamWriter</code>外包装<code>BufferedWriter</code>。</p>
+</blockquote>
+<h5 id="BufferedWriter"><a href="#BufferedWriter" class="headerlink" title="BufferedWriter"></a><code>BufferedWriter</code></h5><ul>
+<li>提供适配不同环境的<code>newLine()</code>方法用于换行（并非所有平台均使用<code>\n</code>进行换行）；</li>
+<li>在输出至字符流前会先将<strong>字符存入缓冲区</strong>，提升效率。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">BufferedWriter</span><span class="params">(Writer)</span></span></span><br><span class="line"><span class="function"><span class="comment">//可选重载参数：int sz，指定缓冲区大小</span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h5 id="FileWriter"><a href="#FileWriter" class="headerlink" title="FileWriter"></a><code>FileWriter</code></h5><ul>
+<li>写入文件用，<strong>使用默认编码</strong>和默认<strong>字节缓冲区大小</strong>（无字符缓冲，可通过包装<code>BufferedWriter</code>来改善性能）。若想改变编码，可在<code>FileOutputStream</code>上使用<code>OutputStreamWriter</code>。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">FileWriter</span><span class="params">(String fileName)</span></span></span><br><span class="line"><span class="function"><span class="comment">//重载参数：File</span></span></span><br><span class="line"><span class="function"><span class="comment">//可选重载参数：boolean，true时为append模式</span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>==Tips:== 某些平台<strong>只允许一个操作文件的对象(i.e.<code>FileWriter</code>)同时操作同一文件</strong>，容易导致抛出IOException。</p>
+</blockquote>
+<h5 id="PrintWriter"><a href="#PrintWriter" class="headerlink" title="PrintWriter"></a><code>PrintWriter</code></h5><ul>
+<li>输出格式化的文本。<strong>可以指定编码</strong>。该类中实现了<code>PrintStream</code>类中的所有<code>print*</code>方法以及<code>format()</code>方法。不提供字节输出。</li>
+<li>其构造函数包含可选<code>boolean</code>重载参数，值为<code>true</code>时开启自动刷新模式，即在每个<code>print*</code>方法被调用时执行<code>flush()</code>方法。（默认为当输出一个换行符<code>\n</code>时执行）</li>
+<li>除某些构造函数构造的对象外不会抛出<code>IOException</code>。需要手动调用<code>checkError()</code>方法，若返回<code>true</code>则说明在输出至流或在格式化字符串的过程中遇到错误。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PrintWriter</span><span class="params">(Writer)</span></span>;</span><br><span class="line"><span class="comment">//重载参数：OutputStream, File, String fileName.</span></span><br><span class="line"><span class="comment">//可选重载参数：boolean，true时为自动刷新模式；String csn，指定的编码。</span></span><br><span class="line">	</span><br><span class="line"><span class="keyword">public</span></span><br><span class="line">	<span class="function">PrintWriter <span class="title">append</span><span class="params">(CharSequence csq)</span><span class="comment">//等价于write(csq.toString()),受缓冲区的限制可能不能输出所有内容</span></span></span><br><span class="line"><span class="function">	<span class="comment">//其他重载没有此限制</span></span></span><br><span class="line"><span class="function">	<span class="comment">//若字符串为null，则输出"null"</span></span></span><br><span class="line"><span class="function"><span class="keyword">protected</span></span></span><br><span class="line"><span class="function">	<span class="keyword">void</span> <span class="title">clearError</span><span class="params">()</span><span class="comment">//初始化checkError()检查的flag</span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://zyfAndroid.com/2018/09/21/JavaIO/" data-id="cjufnfdc90005i8svcpq1hmp6" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="valine-thread"></div>
+
+
+    
+    </section>
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-google-plus"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/zzzyyf" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="weibo" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-weibo"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2019/04/13/C语言基础填坑（一）——多维数组/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            C语言基础填坑（一）——多维数组
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2018/09/04/AndroidPractice3/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">Android实战记（三）——实现弹出日期选择对话框</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/04/13/C语言基础填坑（一）——多维数组/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/04/13/C语言基础填坑（一）——多维数组/" class="title">C语言基础填坑（一）——多维数组</a></p>
+                            <p class="item-date"><time datetime="2019-04-13T03:38:10.000Z" itemprop="datePublished">2019-04-13</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/21/JavaIO/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://raw.githubusercontent.com/zzzyyf/C-Codes/master/IOStreamHierarchy.png)" alt="Java I/O简要笔记（一）——基础部分" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/09/21/JavaIO/" class="title">Java I/O简要笔记（一）——基础部分</a></p>
+                            <p class="item-date"><time datetime="2018-09-21T14:09:53.000Z" itemprop="datePublished">2018-09-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/04/AndroidPractice3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://raw.githubusercontent.com/zzzyyf/C-Codes/master/fragment_lifecycle.png)" alt="Android实战记（三）——实现弹出日期选择对话框" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/09/04/AndroidPractice3/" class="title">Android实战记（三）——实现弹出日期选择对话框</a></p>
+                            <p class="item-date"><time datetime="2018-09-04T15:20:08.000Z" itemprop="datePublished">2018-09-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/23/androidPractice2/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/23/androidPractice2/" class="title">Android实战记（二）——使用本地广播实现强制下线</a></p>
+                            <p class="item-date"><time datetime="2018-08-23T09:59:01.000Z" itemprop="datePublished">2018-08-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/" class="title">Android实战记（一）——用ConnectivityManager管理网络连接</a></p>
+                            <p class="item-date"><time datetime="2018-08-15T02:39:57.000Z" itemprop="datePublished">2018-08-15</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">9</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AlertDialog/">AlertDialog</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Broadcast/">Broadcast</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-Language/">C Language</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ConnectivityManager/">ConnectivityManager</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DatePickerDialog/">DatePickerDialog</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DialogFragment/">DialogFragment</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Fragment-Lifecycle/">Fragment Lifecycle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Handler/">Handler</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Intent/">Intent</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NetworkCallback/">NetworkCallback</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TextInputLayout/">TextInputLayout</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Toast/">Toast</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Writer/">Writer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logcat/">logcat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调/">回调</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基础/">基础</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多维数组/">多维数组</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/字符串/">字符串</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实战/">实战</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程/">工程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/本地广播/">本地广播</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生命周期/">生命周期</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第一课/">第一课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第三课/">第三课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第二课/">第二课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第五课/">第五课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第六课/">第六课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第四课/">第四课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/结构/">结构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络/">网络</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/菜单/">菜单</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/资源/">资源</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/AlertDialog/" style="font-size: 10px;">AlertDialog</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Broadcast/" style="font-size: 10px;">Broadcast</a> <a href="/tags/C-Language/" style="font-size: 10px;">C Language</a> <a href="/tags/ConnectivityManager/" style="font-size: 10px;">ConnectivityManager</a> <a href="/tags/DatePickerDialog/" style="font-size: 10px;">DatePickerDialog</a> <a href="/tags/DialogFragment/" style="font-size: 10px;">DialogFragment</a> <a href="/tags/Fragment-Lifecycle/" style="font-size: 10px;">Fragment Lifecycle</a> <a href="/tags/Handler/" style="font-size: 10px;">Handler</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Intent/" style="font-size: 10px;">Intent</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/NetworkCallback/" style="font-size: 10px;">NetworkCallback</a> <a href="/tags/TextInputLayout/" style="font-size: 10px;">TextInputLayout</a> <a href="/tags/Toast/" style="font-size: 10px;">Toast</a> <a href="/tags/Writer/" style="font-size: 10px;">Writer</a> <a href="/tags/logcat/" style="font-size: 10px;">logcat</a> <a href="/tags/回调/" style="font-size: 10px;">回调</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/多维数组/" style="font-size: 10px;">多维数组</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/实战/" style="font-size: 16.67px;">实战</a> <a href="/tags/工程/" style="font-size: 10px;">工程</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/本地广播/" style="font-size: 10px;">本地广播</a> <a href="/tags/生命周期/" style="font-size: 10px;">生命周期</a> <a href="/tags/第一课/" style="font-size: 10px;">第一课</a> <a href="/tags/第三课/" style="font-size: 10px;">第三课</a> <a href="/tags/第二课/" style="font-size: 10px;">第二课</a> <a href="/tags/第五课/" style="font-size: 10px;">第五课</a> <a href="/tags/第六课/" style="font-size: 10px;">第六课</a> <a href="/tags/第四课/" style="font-size: 10px;">第四课</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/结构/" style="font-size: 10px;">结构</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/菜单/" style="font-size: 10px;">菜单</a> <a href="/tags/资源/" style="font-size: 10px;">资源</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 Winfrid Zhao</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:true,
+            verify:false,
+            app_id: '0iLvttr7eqTWnMheukUX3bBs-gzGzoHsz',
+            app_key: 'yjaVulXksMxSWP485LJEpOrm',
+            placeholder: 'Just Do It',
+            pageSize: '10',
+            avatar: 'identicon',
+            avatar_cdn:  'https://gravatar.loli.net/avatar/'
+        });
+    </script>
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

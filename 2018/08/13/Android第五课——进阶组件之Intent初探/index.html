@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>Android第五课——进阶组件之Intent初探 | 从0.1开始学Android</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Android,第五课,Intent" />
+    
+    <meta name="description" content="Intent Intent 会在运行时将各个组件相互绑定（您可以将 Intent 视为从其他组件请求操作的信使），无论组件属于您的应用还是其他应用。  Intent是Android程序中各组件之间交互的重要方式，不仅可指明当前组件想要的动作，还能在不同组件间传递数据。 Intent包含的部分：组件名称，操作，数据，类别，Extra，标志   显式Intent 显式Intent指定明确的上下文和要转">
+<meta name="keywords" content="Android,第五课,Intent">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android第五课——进阶组件之Intent初探">
+<meta property="og:url" content="http://zyfAndroid.com/2018/08/13/Android第五课——进阶组件之Intent初探/index.html">
+<meta property="og:site_name" content="从0.1开始学Android">
+<meta property="og:description" content="Intent Intent 会在运行时将各个组件相互绑定（您可以将 Intent 视为从其他组件请求操作的信使），无论组件属于您的应用还是其他应用。  Intent是Android程序中各组件之间交互的重要方式，不仅可指明当前组件想要的动作，还能在不同组件间传递数据。 Intent包含的部分：组件名称，操作，数据，类别，Extra，标志   显式Intent 显式Intent指定明确的上下文和要转">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-13T04:59:42.849Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android第五课——进阶组件之Intent初探">
+<meta name="twitter:description" content="Intent Intent 会在运行时将各个组件相互绑定（您可以将 Intent 视为从其他组件请求操作的信使），无论组件属于您的应用还是其他应用。  Intent是Android程序中各组件之间交互的重要方式，不仅可指明当前组件想要的动作，还能在不同组件间传递数据。 Intent包含的部分：组件名称，操作，数据，类别，Extra，标志   显式Intent 显式Intent指定明确的上下文和要转">
+    
+
+    
+        <link rel="alternate" href="/" title="从0.1开始学Android" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">zyf的Android学习笔记</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                        
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    未分类
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-Android第五课——进阶组件之Intent初探" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        Android第五课——进阶组件之Intent初探
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2018/08/13/Android第五课——进阶组件之Intent初探/" class="article-date">
+            <time datetime="2018-08-13T02:58:46.000Z" itemprop="datePublished">2018-08-13</time>
+        </a>
+    </div>
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/Intent/">Intent</a>, <a class="tag-link" href="/tags/第五课/">第五课</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h3 id="Intent"><a href="#Intent" class="headerlink" title="Intent"></a>Intent</h3><blockquote>
+<p>Intent 会在运行时将各个组件相互绑定（您可以将 Intent 视为从其他组件请求操作的信使），无论组件属于您的应用还是其他应用。</p>
+<ul>
+<li>Intent是Android程序中各组件之间交互的重要方式，不仅可指明当前组件想要的动作，还能在不同组件间传递数据。</li>
+<li>Intent包含的部分：组件名称，操作，数据，类别，<code>Extra</code>，标志</li>
+</ul>
+</blockquote>
+<h4 id="显式Intent"><a href="#显式Intent" class="headerlink" title="显式Intent"></a>显式Intent</h4><ul>
+<li>显式Intent指定明确的上下文和要转到的活动的<code>class</code>对象<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Intent(Context packageContext, Class&lt;&gt; cls)<span class="comment">//第二个参数指定想要启动的目标活动</span></span><br><span class="line"></span><br><span class="line">button1.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123; </span><br><span class="line">    <span class="meta">@Override</span> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123; </span><br><span class="line">    Intent intent = <span class="keyword">new</span> Intent(FirstActivity.<span class="keyword">this</span>, SecondActivity.class); startActivity(intent); </span><br><span class="line">    &#125; </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="隐式Intent"><a href="#隐式Intent" class="headerlink" title="隐式Intent"></a>隐式Intent</h4><blockquote>
+<p>系统通过将接收到的 Intent 与设备上的其他应用的清单文件中提供的 Intent 过滤器进行比较来确定可以响应 Intent 的组件。</p>
+<ul>
+<li>隐式Intent不会指定特定的组件，而是<strong>声明要执行的常规操作</strong>，从而允许其他应用中的组件来处理它。创建隐式Intent时,Android系统通过将Intent的内容与在设备上其他应用的清单文件中声明的<strong>Intent过滤器</strong>进行比较，从而找到要启动的相应组件。如果Intent与<code>Intent过滤器</code>匹配，则系统将启动该组件，并向其传递Intent对象。如果多个<code>Intent过滤器</code>兼容，则系统会显示一个对话框，支持用户选取要使用的应用。</li>
+<li><code>Intent过滤器</code>是应用清单文件中的一个表达式，它指定该组件要接收的Intent类型。例如，通过为Activity声明<code>Intent过滤器</code>，您可以使其他应用能够直接使用某一特定类型的Intent启动Activity。同样，如果您<strong>没有为Activity声明任何<code>Intent过滤器</code>，则Activity只能通过显式Intent启动。</strong>只有<code>Intent过滤器</code>的<code>action</code>标签与<code>catogory</code>标签<strong>同时与Intent中指定的<code>action</code>和<code>category</code>匹配</strong>时活动才能响应该Intent。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">button1.setOnClickListener(<span class="keyword">new</span> View.OnClickListener()&#123;</span><br><span class="line">    <span class="meta">@override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span></span>&#123;</span><br><span class="line">        Intent intent = <span class="keyword">new</span> Intent(<span class="string">"com.example.activitytest.ACTION_START"</span>);</span><br><span class="line">        <span class="comment">//此处使用Intent的另一个构造函数，传入action字符串即可。</span></span><br><span class="line">        startActivity(intent);</span><br><span class="line">        <span class="comment">//"android.intent.category.DEFAULT"是一种默认的category，调用startActivity()方法时会自动将其添加到Intent中。</span></span><br><span class="line">        <span class="comment">//或intent.addCategory("categoryName");来添加category</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>还可以利用隐式Intent<strong>启动其他应用程序内的活动</strong>，比如分享到其他App，打开网页等操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">button1.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">    <span class="meta">@Override</span> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123; </span><br><span class="line">    Intent intent = <span class="keyword">new</span> Intent(Intent.ACTION_VIEW);</span><br><span class="line">    <span class="comment">//这是Android系统内置的一个动作，其常量值为android.intent.action.VIEW</span></span><br><span class="line">    intent.setData(Uri.parse(<span class="string">"http://www.baidu.com"</span>)); </span><br><span class="line">    <span class="comment">//通过Uri.parse()方法将网址字符串解析成Uri对象，使用setData()方法把URI赋给Intent。（Intent的Data使用URI来表示）</span></span><br><span class="line">    startActivity(intent); </span><br><span class="line">    &#125; </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在<code>AndroidManifest.xml</code>文件中，可以为活动的<code>Intent过滤器</code>指定额外的<code>&lt;data&gt;</code>标签限定活动能响应的URI类型。<strong>只有<code>&lt;data&gt;</code>标签中指定的内容和Intent中携带的Data完全 一致时，当前活动才能够响应该Intent</strong>。以下是常用的标签内容：</p>
+<ul>
+<li>android:scheme。用于指定数据的协议部分，如http，geo(地理位置)，tel(拨打电话)等。</li>
+<li>android:host。用于指定数据的主机名部分，如<a href="http://www.baidu.com。" target="_blank" rel="noopener">www.baidu.com。</a></li>
+<li>android:port。用于指定数据的端口部分，一般紧随在主机名之后。 </li>
+<li>android:path。用于指定主机名和端口之后的部分，如一段网址中跟在域名之后的内容。 </li>
+<li>android:mimeType。用于指定可以处理的数据类型，允许使用通配符的方式进行指定。</li>
+</ul>
+</li>
+<li>可以使用Intent在启动活动的同时传递数据。<ol>
+<li>把需要传递的数据用<code>putExtra()</code>方法存放在<code>Extra</code>中</li>
+<li>在另一个活动中用<code>getIntent()</code>方法取得传来的Intent</li>
+<li>用<code>getStringExtra()</code>方法取回数据（其他类型类似）</li>
+</ol>
+</li>
+<li><p>也可以使用Intent给上一个活动返回数据。开发文档中有一个<code>startActivityForResult()</code>方法用于启动活动并向上一个活动返回数据。</p>
+<ol>
+<li>给它传递一个启动活动用的Intent和一个唯一的<code>requestCode</code>参数</li>
+<li>在另一个活动中用另一个Intent的<code>Extra</code>携带要返回的信息</li>
+<li>用setResult()方法设置传回Intent和结果（<code>RESULT_OK</code>或<code>RESULT_CANCELED</code>）</li>
+<li>用<code>finish()</code>方法结束当前活动并传回Intent</li>
+<li>返回到上一个活动后会回调<code>onActivityResult()</code>方法，重写该方法添加从中得到返回的数据的逻辑</li>
+<li>注意“返回到上一个活动时”包含所有返回的情况，如按Back键等，在按Back键返回的情况下需要重写<code>onBackPressed()</code>方法来执行<code>setResult()</code>方法。（此时<code>super.onBackPressed()</code>要写在最后）</li>
+</ol>
+</li>
+<li><p>更多Intent的例子会在之后的广播中遇到。</p>
+</li>
+</ul>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://zyfAndroid.com/2018/08/13/Android第五课——进阶组件之Intent初探/" data-id="cjufnfdc20001i8sv8os88k91" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="valine-thread"></div>
+
+
+    
+    </section>
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-google-plus"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/zzzyyf" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="weibo" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-weibo"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/08/14/Android第六课——活动的生命周期/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            Android第六课——活动的生命周期
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2018/08/13/Android第四课——进阶组件之Toast与菜单/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">Android第四课——进阶组件之Toast与菜单</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/04/13/C语言基础填坑（一）——多维数组/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/04/13/C语言基础填坑（一）——多维数组/" class="title">C语言基础填坑（一）——多维数组</a></p>
+                            <p class="item-date"><time datetime="2019-04-13T03:38:10.000Z" itemprop="datePublished">2019-04-13</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/21/JavaIO/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://raw.githubusercontent.com/zzzyyf/C-Codes/master/IOStreamHierarchy.png)" alt="Java I/O简要笔记（一）——基础部分" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/09/21/JavaIO/" class="title">Java I/O简要笔记（一）——基础部分</a></p>
+                            <p class="item-date"><time datetime="2018-09-21T14:09:53.000Z" itemprop="datePublished">2018-09-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/04/AndroidPractice3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://raw.githubusercontent.com/zzzyyf/C-Codes/master/fragment_lifecycle.png)" alt="Android实战记（三）——实现弹出日期选择对话框" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/09/04/AndroidPractice3/" class="title">Android实战记（三）——实现弹出日期选择对话框</a></p>
+                            <p class="item-date"><time datetime="2018-09-04T15:20:08.000Z" itemprop="datePublished">2018-09-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/23/androidPractice2/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/23/androidPractice2/" class="title">Android实战记（二）——使用本地广播实现强制下线</a></p>
+                            <p class="item-date"><time datetime="2018-08-23T09:59:01.000Z" itemprop="datePublished">2018-08-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/15/Android实战记（一）——用ConnectivityManager管理网络连接/" class="title">Android实战记（一）——用ConnectivityManager管理网络连接</a></p>
+                            <p class="item-date"><time datetime="2018-08-15T02:39:57.000Z" itemprop="datePublished">2018-08-15</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">9</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AlertDialog/">AlertDialog</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Broadcast/">Broadcast</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-Language/">C Language</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ConnectivityManager/">ConnectivityManager</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DatePickerDialog/">DatePickerDialog</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DialogFragment/">DialogFragment</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Fragment-Lifecycle/">Fragment Lifecycle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Handler/">Handler</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/I-O/">I/O</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Intent/">Intent</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NetworkCallback/">NetworkCallback</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TextInputLayout/">TextInputLayout</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Toast/">Toast</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Writer/">Writer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logcat/">logcat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调/">回调</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基础/">基础</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多维数组/">多维数组</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/字符串/">字符串</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实战/">实战</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程/">工程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/本地广播/">本地广播</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生命周期/">生命周期</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第一课/">第一课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第三课/">第三课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第二课/">第二课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第五课/">第五课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第六课/">第六课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/第四课/">第四课</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/结构/">结构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络/">网络</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/菜单/">菜单</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/资源/">资源</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/AlertDialog/" style="font-size: 10px;">AlertDialog</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Broadcast/" style="font-size: 10px;">Broadcast</a> <a href="/tags/C-Language/" style="font-size: 10px;">C Language</a> <a href="/tags/ConnectivityManager/" style="font-size: 10px;">ConnectivityManager</a> <a href="/tags/DatePickerDialog/" style="font-size: 10px;">DatePickerDialog</a> <a href="/tags/DialogFragment/" style="font-size: 10px;">DialogFragment</a> <a href="/tags/Fragment-Lifecycle/" style="font-size: 10px;">Fragment Lifecycle</a> <a href="/tags/Handler/" style="font-size: 10px;">Handler</a> <a href="/tags/I-O/" style="font-size: 10px;">I/O</a> <a href="/tags/Intent/" style="font-size: 10px;">Intent</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/NetworkCallback/" style="font-size: 10px;">NetworkCallback</a> <a href="/tags/TextInputLayout/" style="font-size: 10px;">TextInputLayout</a> <a href="/tags/Toast/" style="font-size: 10px;">Toast</a> <a href="/tags/Writer/" style="font-size: 10px;">Writer</a> <a href="/tags/logcat/" style="font-size: 10px;">logcat</a> <a href="/tags/回调/" style="font-size: 10px;">回调</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/多维数组/" style="font-size: 10px;">多维数组</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/实战/" style="font-size: 16.67px;">实战</a> <a href="/tags/工程/" style="font-size: 10px;">工程</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/本地广播/" style="font-size: 10px;">本地广播</a> <a href="/tags/生命周期/" style="font-size: 10px;">生命周期</a> <a href="/tags/第一课/" style="font-size: 10px;">第一课</a> <a href="/tags/第三课/" style="font-size: 10px;">第三课</a> <a href="/tags/第二课/" style="font-size: 10px;">第二课</a> <a href="/tags/第五课/" style="font-size: 10px;">第五课</a> <a href="/tags/第六课/" style="font-size: 10px;">第六课</a> <a href="/tags/第四课/" style="font-size: 10px;">第四课</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/结构/" style="font-size: 10px;">结构</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/菜单/" style="font-size: 10px;">菜单</a> <a href="/tags/资源/" style="font-size: 10px;">资源</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 Winfrid Zhao</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:true,
+            verify:false,
+            app_id: '0iLvttr7eqTWnMheukUX3bBs-gzGzoHsz',
+            app_key: 'yjaVulXksMxSWP485LJEpOrm',
+            placeholder: 'Just Do It',
+            pageSize: '10',
+            avatar: 'identicon',
+            avatar_cdn:  'https://gravatar.loli.net/avatar/'
+        });
+    </script>
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
